@@ -36,3 +36,5 @@ Run Main to test your implementation from the IDE or from command line.
 
 Run the main method from Test class with the name of the input file from the command line and the result will be written
 to the out.txt file. Thus, you can compare this result with ref.
+
+test test

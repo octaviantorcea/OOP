@@ -1,5 +1,8 @@
 package entertainment;
 
+import fileio.MovieInputData;
+import fileio.ShowInput;
+
 import java.util.ArrayList;
 
 public class Movie extends Video {
@@ -11,5 +14,11 @@ public class Movie extends Video {
         //magic
         Double PH = 6d;
         setAvgRating(PH);
+    }
+
+    @Override
+    public void readVideo(ShowInput showInput) {
+        super.readVideo(showInput);
+        this.duration = ((MovieInputData)showInput).getDuration();
     }
 }

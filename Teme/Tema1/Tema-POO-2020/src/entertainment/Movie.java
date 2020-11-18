@@ -21,4 +21,13 @@ public class Movie extends Video {
         super.readVideo(showInput);
         this.duration = ((MovieInputData)showInput).getDuration();
     }
+
+    // for debugging
+    @Override
+    public String toString() {
+        return super.toString() + "Movie{" +
+                "duration=" + duration +
+                ", ratings=" + ratings +
+                '}';
+    }
 }

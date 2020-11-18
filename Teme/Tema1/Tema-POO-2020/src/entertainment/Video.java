@@ -25,4 +25,18 @@ public abstract class Video {
         this.actors.addAll(showInput.getCast());
         this.genres.addAll(showInput.getGenres());
     }
+
+    // for debugging
+    @Override
+    public String toString() {
+        return "Video{" +
+                "title='" + title + '\'' +
+                ", year=" + year +
+                ", actors=" + actors +
+                ", genres=" + genres +
+                ", views=" + views +
+                ", nrOfFav=" + nrOfFav +
+                ", avgRating=" + avgRating +
+                '}';
+    }
 }

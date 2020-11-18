@@ -23,4 +23,14 @@ public class Show extends Video {
         this.nrSeasons = ((SerialInputData)showInput).getNumberSeason();
         this.seasons = ((SerialInputData)showInput).getSeasons();
     }
+
+    // for debugging
+    @Override
+    public String toString() {
+        return super.toString() + "Show{" +
+                "nrSeasons=" + nrSeasons +
+                ", totalDuration=" + totalDuration +
+                ", seasons=" + seasons +
+                '}';
+    }
 }

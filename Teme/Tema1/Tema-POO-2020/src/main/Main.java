@@ -3,6 +3,7 @@ package main;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import database.ActionDatabase;
 import database.ActorDatabase;
 import database.UserDatabase;
 import database.VideoDatabase;
@@ -79,6 +80,7 @@ public final class Main {
 
         UserDatabase userDatabase = new UserDatabase(input.getUsers(), videoDatabase);
         ActorDatabase actorDatabase = new ActorDatabase(input.getActors(), videoDatabase);
+        ActionDatabase actionDatabase = new ActionDatabase(input.getCommands());
 
         //for debugging
         videoDatabase.printDatabase();
@@ -86,6 +88,8 @@ public final class Main {
         userDatabase.printUserdata();
         System.out.println();
         actorDatabase.printActorData();
+        System.out.println();
+        actionDatabase.printActionData();
 
         fileWriter.closeJSON(arrayResult);
     }

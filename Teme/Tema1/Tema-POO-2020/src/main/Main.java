@@ -3,6 +3,7 @@ package main;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import database.UserDatabase;
 import database.VideoDatabase;
 import fileio.Input;
 import fileio.InputLoader;
@@ -75,8 +76,12 @@ public final class Main {
         VideoDatabase videoDatabase = new VideoDatabase(input.getMovies(),
                                                         input.getSerials());
 
+        UserDatabase userDatabase = new UserDatabase(input.getUsers(), videoDatabase);
+
         //for debugging
         videoDatabase.printDatabase();
+        System.out.println();
+        userDatabase.printUserdata();
 
         fileWriter.closeJSON(arrayResult);
     }

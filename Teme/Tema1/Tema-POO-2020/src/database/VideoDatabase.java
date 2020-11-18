@@ -3,35 +3,36 @@ package database;
 import entertainment.Movie;
 import entertainment.Show;
 import entertainment.Video;
-import fileio.Input;
 import fileio.MovieInputData;
 import fileio.SerialInputData;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class VideoDatabase {
-    private LinkedHashSet<Video> videoDatabase = new LinkedHashSet<>();
+    private LinkedHashMap<String, Video> videoDatabase = new LinkedHashMap<>();
 
     public VideoDatabase(List<MovieInputData> movieData,
                          List<SerialInputData> serialData) {
         for (MovieInputData movieEntry : movieData) {
             Movie newMovie = new Movie();
             newMovie.readVideo(movieEntry);
-            videoDatabase.add(newMovie);
+            videoDatabase.put(newMovie.getTitle(), newMovie);
         }
 
         for (SerialInputData serialEntry : serialData) {
             Show newShow = new Show();
             newShow.readVideo(serialEntry);
-            videoDatabase.add(newShow);
+            videoDatabase.put(newShow.getTitle(), newShow);
         }
+    }
+
+    public LinkedHashMap<String, Video> getVideoDatabase() {
+        return videoDatabase;
     }
 
     // for debugging
     public void printDatabase() {
-        for (Video video : videoDatabase) {
-            System.out.println(video);
-        }
+        videoDatabase.forEach((s, video) -> System.out.println(video));
     }
 }

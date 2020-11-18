@@ -26,6 +26,26 @@ public abstract class Video {
         this.genres.addAll(showInput.getGenres());
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public int getNrOfFav() {
+        return nrOfFav;
+    }
+
+    public void setNrOfFav(int nrOfFav) {
+        this.nrOfFav = nrOfFav;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
     // for debugging
     @Override
     public String toString() {

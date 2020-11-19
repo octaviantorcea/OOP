@@ -8,6 +8,7 @@ import fileio.ActionInputData;
 import user.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static common.Constants.*;
@@ -146,7 +147,7 @@ public class Action {
 
                     case (POPULAR):
                         if (!userRec.getSubscription()) {
-                            return FAV_REC + CANT_APPLY;
+                            return POPULAR_REC + CANT_APPLY;
                         }
 
                     case (FAVORITE):
@@ -178,7 +179,23 @@ public class Action {
 
                     case (SEARCH):
                         if (!userRec.getSubscription()) {
-                            return FAV_REC + CANT_APPLY;
+                            return SEARCH_REC + CANT_APPLY;
+                        }
+
+                        ArrayList<String> searchRec = new ArrayList<>();
+
+                        for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
+                            if (!userRec.getViewedList().containsKey(videoEntry)
+                                    && videoEntry.getGenres().contains(this.genre)) {
+                                searchRec.add(videoEntry.getTitle());
+                            }
+                        }
+
+                        if (searchRec.isEmpty()) {
+                            return SEARCH_REC + CANT_APPLY;
+                        } else {
+                            Collections.sort(searchRec);
+                            return SEARCH_REC + REZZ + searchRec;
                         }
                 }
                 break;

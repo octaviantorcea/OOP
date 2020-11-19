@@ -50,6 +50,10 @@ public abstract class Video {
         return avgRating;
     }
 
+    public HashSet<String> getGenres() {
+        return genres;
+    }
+
     // for debugging
     @Override
     public String toString() {

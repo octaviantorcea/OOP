@@ -4,7 +4,6 @@ import database.VideoDatabase;
 import entertainment.Movie;
 import entertainment.Show;
 import entertainment.Video;
-import entertainment.Season;
 import fileio.UserInputData;
 import static common.Constants.BASIC;
 import static common.Constants.PREMIUM;
@@ -92,6 +91,10 @@ public class User {
 
     public boolean getSubscription() {
         return this.subscription;
+    }
+
+    public int getNrOfRatings() {
+        return nrOfRatings;
     }
 
     // for debugging

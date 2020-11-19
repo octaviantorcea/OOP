@@ -6,9 +6,11 @@ import database.VideoDatabase;
 import entertainment.Video;
 import fileio.ActionInputData;
 import user.User;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static common.Constants.*;
@@ -101,7 +103,28 @@ public class Action {
                 break;
 
             case (QUERY):
-                //smtsmth
+                switch (this.objectType) {
+                    case (USERS):
+                        ArrayList<User> users = new ArrayList<>();
+
+                        for (User user : userDatabase.getUserDatabase().values()) {
+                            if (user.getNrOfRatings() > 0) {
+                                users.add(user);
+                            }
+                        }
+
+                        users.sort(Comparator.comparingInt(User::getNrOfRatings));
+
+                        while (this.number < users.size()) {
+                            users.remove(this.number);
+                        }
+
+                        if (this.criteria.equals(DESCENDING)) {
+                            Collections.reverse(users);
+                        }
+
+                        return QUERY_REZZ + Utils.usernamesToString(users);
+                }
                 break;
 
             case (RECOMMENDATION):

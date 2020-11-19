@@ -100,4 +100,6 @@ public final class Constants {
     public static final String FAV_REC = "FavoriteRecommendation ";
     public static final String POPULAR_REC = "PopularRecommendation ";
     public static final String SEARCH_REC = "SearchRecommendation ";
+    public static final String QUERY_REZZ = "Query result: ";
+    public static final String DESCENDING = "desc";
 }

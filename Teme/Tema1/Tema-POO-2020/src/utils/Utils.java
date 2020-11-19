@@ -5,6 +5,7 @@ import common.Constants;
 import entertainment.Genre;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import user.User;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -122,5 +123,17 @@ public final class Utils {
         }
 
         return mapVideos;
+    }
+
+    public static String usernamesToString(ArrayList<User> users) {
+        StringBuilder toArray = new StringBuilder("[");
+
+        for (int i = 0; i < users.size() - 1; i++) {
+            toArray.append(users.get(i).getUsername()).append(", ");
+        }
+
+        toArray.append(users.get(users.size() - 1).getUsername()).append("]");
+
+        return toArray.toString();
     }
 }

@@ -89,4 +89,15 @@ public final class Constants {
     public static final String WAS_RATED = " was rated with ";
     public static final String BY = " by ";
     public static final String ALREADY_RATED = " has been already rated";
+    public static final String STANDARD = "standard";
+    public static final String STANDARD_REC = "StandardRecommendation ";
+    public static final String CANT_APPLY = "cannot be applied!";
+    public static final String REZZ = "result: ";
+    public static final String BEST_UNSEEN = "best_unseen";
+    public static final String BEST_UNSEEN_REC = "BestRatedUnseenRecommendation ";
+    public static final String POPULAR = "popular";
+    public static final String SEARCH = "search";
+    public static final String FAV_REC = "FavoriteRecommendation ";
+    public static final String POPULAR_REC = "PopularRecommendation ";
+    public static final String SEARCH_REC = "SearchRecommendation ";
 }

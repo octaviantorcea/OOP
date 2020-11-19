@@ -90,6 +90,10 @@ public class User {
         return ratedShows;
     }
 
+    public boolean getSubscription() {
+        return this.subscription;
+    }
+
     // for debugging
     @Override
     public String toString() {

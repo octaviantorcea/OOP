@@ -46,6 +46,10 @@ public abstract class Video {
         this.views = views;
     }
 
+    public Double getAvgRating() {
+        return avgRating;
+    }
+
     // for debugging
     @Override
     public String toString() {

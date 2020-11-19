@@ -16,6 +16,10 @@ public class UserDatabase {
         }
     }
 
+    public HashMap<String, User> getUserDatabase() {
+        return userDatabase;
+    }
+
     // for debugging
     public void printUserdata() {
         userDatabase.forEach(((s, user) -> System.out.println(user)));

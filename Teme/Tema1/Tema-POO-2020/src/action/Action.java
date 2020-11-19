@@ -1,8 +1,17 @@
 package action;
 
+import database.ActorDatabase;
+import database.UserDatabase;
+import database.VideoDatabase;
+import entertainment.Video;
 import fileio.ActionInputData;
+import fileio.Writer;
+import org.json.simple.JSONArray;
+import user.User;
 
 import java.util.List;
+
+import static common.Constants.*;
 
 public class Action {
     private final int actionId;
@@ -35,8 +44,56 @@ public class Action {
         this.filters = actionData.getFilters();
     }
 
-    public void executeAction() {
-        // where magic happens
+    public String executeAction(ActorDatabase actorDatabase,
+                              UserDatabase userDatabase,
+                              VideoDatabase videoDatabase) {
+        switch (this.actionType) {
+            case (COMMAND):
+                User user = userDatabase.getUserDatabase().get(this.username);
+                Video video = videoDatabase.getVideoDatabase().get(this.title);
+
+                switch (this.type) {
+                    case (FAVORITE):
+                        if (!user.getFavVideos().contains(video) &&
+                                user.getViewedList().containsKey(video)) {
+                            user.getFavVideos().add(video);
+                            video.setNrOfFav(video.getNrOfFav() + 1);
+                            return SUCCESS + video.getTitle() + ADDED_FAV;
+                        } else if (user.getFavVideos().contains(video)) {
+                            return ERROR + video.getTitle() + ALREADY_FAV;
+                        } else if (!user.getViewedList().containsKey(video)) {
+                            return ERROR + video.getTitle() + NOT_SEEN;
+                        }
+                        break;
+
+                    case (VIEW):
+                        video.setViews(video.getViews() + 1);
+
+                        if (!user.getViewedList().containsKey(video)) {
+                            user.getViewedList().put(video, 1);
+                        } else {
+                            user.getViewedList().put(video, user.getViewedList().get(video) + 1);
+                        }
+
+                        return SUCCESS + video.getTitle() + WAS_VIEWD +
+                                user.getViewedList().get(video);
+                }
+                break;
+
+            case (QUERY):
+                //smtsmth
+                break;
+
+            case (RECOMMENDATION):
+                //jdsfghdfj
+                break;
+        }
+
+        return "";
+    }
+
+    public int getActionId() {
+        return actionId;
     }
 
     // for debugging

@@ -54,6 +54,14 @@ public class User {
         return username;
     }
 
+    public HashSet<Video> getFavVideos() {
+        return favVideos;
+    }
+
+    public HashMap<Video, Integer> getViewedList() {
+        return viewedList;
+    }
+
     // for debugging
     @Override
     public String toString() {

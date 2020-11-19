@@ -77,4 +77,12 @@ public final class Constants {
     // add any constants you think you may use
     public static final String BASIC = "BASIC";
     public static final String PREMIUM = "PREMIUM";
+    public static final String FAVORITE = "favorite";
+    public static final String VIEW = "view";
+    public static final String SUCCESS = "success -> ";
+    public static final String ERROR = "error -> ";
+    public static final String ADDED_FAV = " was added as favourite";
+    public static final String ALREADY_FAV = " is already in favourite list";
+    public static final String NOT_SEEN = " is not seen";
+    public static final String WAS_VIEWD = " was viewed with total views of ";
 }

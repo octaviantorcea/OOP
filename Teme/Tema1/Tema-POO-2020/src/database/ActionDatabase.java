@@ -16,6 +16,10 @@ public class ActionDatabase {
         }
     }
 
+    public ArrayList<Action> getActionsDatabase() {
+        return actionsDatabase;
+    }
+
     //for debugging
     public void printActionData() {
         actionsDatabase.forEach(System.out::println);

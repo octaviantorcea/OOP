@@ -1,5 +1,6 @@
 package main;
 
+import action.Action;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
@@ -82,14 +83,19 @@ public final class Main {
         ActorDatabase actorDatabase = new ActorDatabase(input.getActors(), videoDatabase);
         ActionDatabase actionDatabase = new ActionDatabase(input.getCommands());
 
-        //for debugging
+        for (Action action : actionDatabase.getActionsDatabase()) {
+            String message = action.executeAction(actorDatabase, userDatabase, videoDatabase);
+            arrayResult.add(fileWriter.writeFile(action.getActionId(), "", message));
+        }
+
+        /*for debugging
         videoDatabase.printDatabase();
         System.out.println();
         userDatabase.printUserdata();
         System.out.println();
         actorDatabase.printActorData();
         System.out.println();
-        actionDatabase.printActionData();
+        actionDatabase.printActionData();*/
 
         fileWriter.closeJSON(arrayResult);
     }

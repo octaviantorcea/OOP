@@ -1,11 +1,15 @@
 package user;
 
 import database.VideoDatabase;
+import entertainment.Movie;
+import entertainment.Show;
 import entertainment.Video;
+import entertainment.Season;
 import fileio.UserInputData;
 import static common.Constants.BASIC;
 import static common.Constants.PREMIUM;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -15,6 +19,8 @@ public class User {
     private HashSet<Video> favVideos = new HashSet<>();
     private HashMap<Video, Integer> viewedList = new HashMap<>();
     private int nrOfRatings = 0;
+    private HashSet<String> ratedMovies = new HashSet<>();
+    private HashSet<String> ratedShows = new HashSet<>();
 
     private boolean readSubscription(UserInputData userData) {
         if (userData.getSubscriptionType().equals(BASIC)) {
@@ -43,6 +49,20 @@ public class User {
         }));
     }
 
+    public void rateMovie(String title, Video movie, Double rating) {
+        nrOfRatings++;
+        ratedMovies.add(title);
+        ((Movie)movie).getRatings().add(rating);
+        movie.calculateAverageRating();
+    }
+
+    public void rateShow(String title, int season, Video show, Double rating) {
+        nrOfRatings++;
+        ratedShows.add(title + season);
+        ((Show)show).getSeasons().get(season - 1).getRatings().add(rating);
+        show.calculateAverageRating();
+    }
+
     public User(UserInputData userData, VideoDatabase videoDatabase) {
         this.username = userData.getUsername();
         this.subscription = readSubscription(userData);
@@ -60,6 +80,14 @@ public class User {
 
     public HashMap<Video, Integer> getViewedList() {
         return viewedList;
+    }
+
+    public HashSet<String> getRatedMovies() {
+        return ratedMovies;
+    }
+
+    public HashSet<String> getRatedShows() {
+        return ratedShows;
     }
 
     // for debugging

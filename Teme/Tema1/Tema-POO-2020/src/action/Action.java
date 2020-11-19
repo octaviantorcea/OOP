@@ -5,8 +5,6 @@ import database.UserDatabase;
 import database.VideoDatabase;
 import entertainment.Video;
 import fileio.ActionInputData;
-import fileio.Writer;
-import org.json.simple.JSONArray;
 import user.User;
 
 import java.util.List;
@@ -64,7 +62,6 @@ public class Action {
                         } else if (!user.getViewedList().containsKey(video)) {
                             return ERROR + video.getTitle() + NOT_SEEN;
                         }
-                        break;
 
                     case (VIEW):
                         video.setViews(video.getViews() + 1);
@@ -77,6 +74,27 @@ public class Action {
 
                         return SUCCESS + video.getTitle() + WAS_VIEWED +
                                 user.getViewedList().get(video);
+
+                    case (RATING):
+                        if (!user.getViewedList().containsKey(video)) {
+                            return ERROR + video.getTitle() + NOT_SEEN;
+                        } else {
+                            if (this.seasonNumber == 0) {
+                                if (user.getRatedMovies().contains(this.title)) {
+                                    return ERROR + video.getTitle() + ALREADY_RATED;
+                                } else {
+                                    user.rateMovie(this.title, video, this.grade);
+                                    return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
+                                }
+                            } else {
+                                if (user.getRatedShows().contains(this.title + this.seasonNumber)) {
+                                    return ERROR + video.getTitle() + ALREADY_RATED;
+                                } else {
+                                    user.rateShow(this.title, this.seasonNumber, video, this.grade);
+                                    return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
+                                }
+                            }
+                        }
                 }
                 break;
 

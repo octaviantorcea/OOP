@@ -79,10 +79,14 @@ public final class Constants {
     public static final String PREMIUM = "PREMIUM";
     public static final String FAVORITE = "favorite";
     public static final String VIEW = "view";
+    public static final String RATING = "rating";
     public static final String SUCCESS = "success -> ";
     public static final String ERROR = "error -> ";
     public static final String ADDED_FAV = " was added as favourite";
     public static final String ALREADY_FAV = " is already in favourite list";
     public static final String NOT_SEEN = " is not seen";
     public static final String WAS_VIEWED = " was viewed with total views of ";
+    public static final String WAS_RATED = " was rated with ";
+    public static final String BY = " by ";
+    public static final String ALREADY_RATED = " has been already rated";
 }

@@ -11,15 +11,23 @@ public class Movie extends Video {
 
     @Override
     public void calculateAverageRating() {
-        //magic
-        Double PH = 6d;
-        setAvgRating(PH);
+        Double sum = 0d;
+
+        for (Double rating : ratings) {
+            sum += rating;
+        }
+
+        this.avgRating = sum / ratings.size();
     }
 
     @Override
     public void readVideo(ShowInput showInput) {
         super.readVideo(showInput);
         this.duration = ((MovieInputData)showInput).getDuration();
+    }
+
+    public ArrayList<Double> getRatings() {
+        return ratings;
     }
 
     // for debugging

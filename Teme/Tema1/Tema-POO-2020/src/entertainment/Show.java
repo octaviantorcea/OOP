@@ -12,9 +12,20 @@ public class Show extends Video {
 
     @Override
     public void calculateAverageRating() {
-        //magic
-        Double PH = 6d;
-        setAvgRating(PH);
+        double sum = 0d;
+
+        for (Season season : seasons) {
+            Double seasonSum = 0d;
+
+            for (Double rating : season.getRatings()) {
+                seasonSum += rating;
+            }
+
+            seasonSum /= season.getRatings().size();
+            sum += seasonSum;
+        }
+
+        this.avgRating = sum / this.nrSeasons;
     }
 
     @Override
@@ -22,6 +33,10 @@ public class Show extends Video {
         super.readVideo(showInput);
         this.nrSeasons = ((SerialInputData)showInput).getNumberSeason();
         this.seasons = ((SerialInputData)showInput).getSeasons();
+    }
+
+    public ArrayList<Season> getSeasons() {
+        return seasons;
     }
 
     // for debugging

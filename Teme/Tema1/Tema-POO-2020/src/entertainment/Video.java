@@ -11,7 +11,7 @@ public abstract class Video {
     protected HashSet<String> genres = new HashSet<>();
     protected int views = 0;
     protected int nrOfFav = 0;
-    protected Double avgRating;
+    protected Double avgRating = 0d;
 
     public void setAvgRating(Double avgRating) {
         this.avgRating = avgRating;

@@ -43,7 +43,7 @@ Starting audit...
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:50:9: switch without "default" clause. [MissingSwitchDefault]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:55:17: switch without "default" clause. [MissingSwitchDefault]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:57:66: '&&' should be on a new line. [OperatorWrap]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:78:71: '+' should be on a new line. [OperatorWrap]
+[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:78:72: '+' should be on a new line. [OperatorWrap]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:95:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'getActionId' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'getActionId' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:100:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'toString' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'toString' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:102:26: '+' should be on a new line. [OperatorWrap]

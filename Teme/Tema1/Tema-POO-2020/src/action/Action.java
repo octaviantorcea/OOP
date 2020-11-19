@@ -75,7 +75,7 @@ public class Action {
                             user.getViewedList().put(video, user.getViewedList().get(video) + 1);
                         }
 
-                        return SUCCESS + video.getTitle() + WAS_VIEWD +
+                        return SUCCESS + video.getTitle() + WAS_VIEWED +
                                 user.getViewedList().get(video);
                 }
                 break;

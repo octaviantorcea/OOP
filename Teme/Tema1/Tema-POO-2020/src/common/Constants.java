@@ -84,5 +84,5 @@ public final class Constants {
     public static final String ADDED_FAV = " was added as favourite";
     public static final String ALREADY_FAV = " is already in favourite list";
     public static final String NOT_SEEN = " is not seen";
-    public static final String WAS_VIEWD = " was viewed with total views of ";
+    public static final String WAS_VIEWED = " was viewed with total views of ";
 }

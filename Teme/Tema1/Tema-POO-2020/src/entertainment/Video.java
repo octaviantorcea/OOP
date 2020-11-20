@@ -12,6 +12,7 @@ public abstract class Video {
     protected int views = 0;
     protected int nrOfFav = 0;
     protected Double avgRating = 0d;
+    protected int duration = 0;
 
     public abstract void calculateAverageRating();
 

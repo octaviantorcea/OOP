@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public final class Show extends Video {
     private int nrSeasons;
-    private int totalDuration;
     private ArrayList<Season> seasons = new ArrayList<>();
 
     @Override
@@ -33,6 +32,10 @@ public final class Show extends Video {
         super.readVideo(showInput);
         this.nrSeasons = ((SerialInputData) showInput).getNumberSeason();
         this.seasons = ((SerialInputData) showInput).getSeasons();
+
+        for (Season season : this.seasons) {
+            this.duration += season.getDuration();
+        }
     }
 
     public ArrayList<Season> getSeasons() {
@@ -44,7 +47,6 @@ public final class Show extends Video {
     public String toString() {
         return super.toString() + "Show{"
                 + "nrSeasons=" + nrSeasons
-                + ", totalDuration=" + totalDuration
                 + ", seasons=" + seasons
                 + '}';
     }

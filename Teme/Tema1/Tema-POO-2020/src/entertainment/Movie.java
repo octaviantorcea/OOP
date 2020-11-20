@@ -6,7 +6,6 @@ import fileio.ShowInput;
 import java.util.ArrayList;
 
 public final class Movie extends Video {
-    private int duration;
     private final ArrayList<Double> ratings = new ArrayList<>();
 
     @Override

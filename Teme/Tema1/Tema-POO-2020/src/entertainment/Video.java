@@ -13,13 +13,9 @@ public abstract class Video {
     protected int nrOfFav = 0;
     protected Double avgRating = 0d;
 
-    public void setAvgRating(Double avgRating) {
-        this.avgRating = avgRating;
-    }
-
     public abstract void calculateAverageRating();
 
-    public void readVideo(ShowInput showInput) {
+    public void readVideo(final ShowInput showInput) {
         this.title = showInput.getTitle();
         this.year = showInput.getYear();
         this.actors.addAll(showInput.getCast());
@@ -34,7 +30,7 @@ public abstract class Video {
         return nrOfFav;
     }
 
-    public void setNrOfFav(int nrOfFav) {
+    public void setNrOfFav(final int nrOfFav) {
         this.nrOfFav = nrOfFav;
     }
 
@@ -42,7 +38,7 @@ public abstract class Video {
         return views;
     }
 
-    public void setViews(int views) {
+    public void setViews(final int views) {
         this.views = views;
     }
 
@@ -57,14 +53,14 @@ public abstract class Video {
     // for debugging
     @Override
     public String toString() {
-        return "Video{" +
-                "title='" + title + '\'' +
-                ", year=" + year +
-                ", actors=" + actors +
-                ", genres=" + genres +
-                ", views=" + views +
-                ", nrOfFav=" + nrOfFav +
-                ", avgRating=" + avgRating +
-                '}';
+        return "Video{"
+                + "title='" + title + '\''
+                + ", year=" + year
+                + ", actors=" + actors
+                + ", genres=" + genres
+                + ", views=" + views
+                + ", nrOfFav=" + nrOfFav
+                + ", avgRating=" + avgRating
+                + '}';
     }
 }

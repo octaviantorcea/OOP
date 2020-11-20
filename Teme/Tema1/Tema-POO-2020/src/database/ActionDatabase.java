@@ -6,10 +6,10 @@ import fileio.ActionInputData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionDatabase {
-    ArrayList<Action> actionsDatabase = new ArrayList<>();
+public final class ActionDatabase {
+    private final ArrayList<Action> actionsDatabase = new ArrayList<>();
 
-    public ActionDatabase(List<ActionInputData> actionData) {
+    public ActionDatabase(final List<ActionInputData> actionData) {
         for (ActionInputData actionEntry : actionData) {
             Action newAction = new Action(actionEntry);
             actionsDatabase.add(newAction);
@@ -18,10 +18,5 @@ public class ActionDatabase {
 
     public ArrayList<Action> getActionsDatabase() {
         return actionsDatabase;
-    }
-
-    //for debugging
-    public void printActionData() {
-        actionsDatabase.forEach(System.out::println);
     }
 }

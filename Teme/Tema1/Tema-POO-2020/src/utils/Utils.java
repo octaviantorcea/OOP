@@ -125,7 +125,12 @@ public final class Utils {
         return mapVideos;
     }
 
-    public static String usernamesToString(ArrayList<User> users) {
+    /**
+     * Returns a string representation of only the usernames of users from a list.
+     * @param users the list of users whose usernames will be converted to string
+     * @return the string that contains only the usernames of users from a list
+     */
+    public static String usernamesToString(final ArrayList<User> users) {
         StringBuilder toArray = new StringBuilder("[");
 
         for (int i = 0; i < users.size() - 1; i++) {

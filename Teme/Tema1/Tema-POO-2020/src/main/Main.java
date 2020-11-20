@@ -75,12 +75,9 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        //TODO add here the entry point to your implementation
-        VideoDatabase videoDatabase = new VideoDatabase(input.getMovies(),
-                                                        input.getSerials());
-
+        VideoDatabase videoDatabase = new VideoDatabase(input.getMovies(), input.getSerials());
         UserDatabase userDatabase = new UserDatabase(input.getUsers(), videoDatabase);
-        ActorDatabase actorDatabase = new ActorDatabase(input.getActors(), videoDatabase);
+        ActorDatabase actorDatabase = new ActorDatabase(input.getActors());
         ActionDatabase actionDatabase = new ActionDatabase(input.getCommands());
 
         for (Action action : actionDatabase.getActionsDatabase()) {

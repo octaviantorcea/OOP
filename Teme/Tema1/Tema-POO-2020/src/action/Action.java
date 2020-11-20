@@ -13,7 +13,35 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static common.Constants.*;
+import static common.Constants.ADDED_FAV;
+import static common.Constants.ALREADY_FAV;
+import static common.Constants.ALREADY_RATED;
+import static common.Constants.BEST_UNSEEN;
+import static common.Constants.BEST_UNSEEN_REC;
+import static common.Constants.BY;
+import static common.Constants.CANT_APPLY;
+import static common.Constants.COMMAND;
+import static common.Constants.DESCENDING;
+import static common.Constants.ERROR;
+import static common.Constants.FAVORITE;
+import static common.Constants.FAV_REC;
+import static common.Constants.NOT_SEEN;
+import static common.Constants.POPULAR;
+import static common.Constants.POPULAR_REC;
+import static common.Constants.QUERY;
+import static common.Constants.QUERY_REZZ;
+import static common.Constants.RATING;
+import static common.Constants.RECOMMENDATION;
+import static common.Constants.REZZ;
+import static common.Constants.SEARCH;
+import static common.Constants.SEARCH_REC;
+import static common.Constants.STANDARD;
+import static common.Constants.STANDARD_REC;
+import static common.Constants.SUCCESS;
+import static common.Constants.USERS;
+import static common.Constants.VIEW;
+import static common.Constants.WAS_RATED;
+import static common.Constants.WAS_VIEWED;
 
 public class Action {
     private final int actionId;
@@ -30,7 +58,7 @@ public class Action {
     private final int seasonNumber;
     private final List<List<String>> filters;
 
-    public Action(ActionInputData actionData) {
+    public Action(final ActionInputData actionData) {
         this.actionId = actionData.getActionId();
         this.actionType = actionData.getActionType();
         this.type = actionData.getType();
@@ -46,9 +74,9 @@ public class Action {
         this.filters = actionData.getFilters();
     }
 
-    public String executeAction(ActorDatabase actorDatabase,
-                              UserDatabase userDatabase,
-                              VideoDatabase videoDatabase) {
+    public String executeAction(final ActorDatabase actorDatabase,
+                                final UserDatabase userDatabase,
+                                final VideoDatabase videoDatabase) {
         switch (this.actionType) {
             case (COMMAND):
                 User userCom = userDatabase.getUserDatabase().get(this.username);
@@ -56,8 +84,8 @@ public class Action {
 
                 switch (this.type) {
                     case (FAVORITE):
-                        if (!userCom.getFavVideos().contains(video) &&
-                                userCom.getViewedList().containsKey(video)) {
+                        if (!userCom.getFavVideos().contains(video)
+                                && userCom.getViewedList().containsKey(video)) {
                             userCom.getFavVideos().add(video);
                             video.setNrOfFav(video.getNrOfFav() + 1);
                             return SUCCESS + video.getTitle() + ADDED_FAV;
@@ -76,8 +104,8 @@ public class Action {
                             userCom.getViewedList().put(video, userCom.getViewedList().get(video) + 1);
                         }
 
-                        return SUCCESS + video.getTitle() + WAS_VIEWED +
-                                userCom.getViewedList().get(video);
+                        return SUCCESS + video.getTitle() + WAS_VIEWED
+                                + userCom.getViewedList().get(video);
 
                     case (RATING):
                         if (!userCom.getViewedList().containsKey(video)) {
@@ -87,14 +115,14 @@ public class Action {
                                 if (userCom.getRatedMovies().contains(this.title)) {
                                     return ERROR + video.getTitle() + ALREADY_RATED;
                                 } else {
-                                    userCom.rateMovie(this.title, video, this.grade);
+                                    userCom.rateMovie(video, this.grade);
                                     return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
                                 }
                             } else {
                                 if (userCom.getRatedShows().contains(this.title + this.seasonNumber)) {
                                     return ERROR + video.getTitle() + ALREADY_RATED;
                                 } else {
-                                    userCom.rateShow(this.title, this.seasonNumber, video, this.grade);
+                                    userCom.rateShow(this.seasonNumber, video, this.grade);
                                     return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
                                 }
                             }
@@ -155,7 +183,7 @@ public class Action {
                                 if (bestUnseenRec == null) {
                                     bestUnseenRec = videoEntry;
                                 } else {
-                                    if(videoEntry.getAvgRating() > bestUnseenRec.getAvgRating()) {
+                                    if (videoEntry.getAvgRating() > bestUnseenRec.getAvgRating()) {
                                         bestUnseenRec = videoEntry;
                                     }
                                 }
@@ -172,6 +200,8 @@ public class Action {
                         if (!userRec.getSubscription()) {
                             return POPULAR_REC + CANT_APPLY;
                         }
+
+                        //TODO
 
                     case (FAVORITE):
                         if (!userRec.getSubscription()) {
@@ -234,20 +264,20 @@ public class Action {
     // for debugging
     @Override
     public String toString() {
-        return "Action{" +
-                "actionId=" + actionId +
-                ", actionType='" + actionType + '\'' +
-                ", type='" + type + '\'' +
-                ", username='" + username + '\'' +
-                ", objectType='" + objectType + '\'' +
-                ", sortType='" + sortType + '\'' +
-                ", criteria='" + criteria + '\'' +
-                ", title='" + title + '\'' +
-                ", genre='" + genre + '\'' +
-                ", number=" + number +
-                ", grade=" + grade +
-                ", seasonNumber=" + seasonNumber +
-                ", filters=" + filters +
-                '}';
+        return "Action{"
+                + "actionId=" + actionId
+                + ", actionType='" + actionType + '\''
+                + ", type='" + type + '\''
+                + ", username='" + username + '\''
+                + ", objectType='" + objectType + '\''
+                + ", sortType='" + sortType + '\''
+                + ", criteria='" + criteria + '\''
+                + ", title='" + title + '\''
+                + ", genre='" + genre + '\''
+                + ", number=" + number
+                + ", grade=" + grade
+                + ", seasonNumber=" + seasonNumber
+                + ", filters=" + filters
+                + '}';
     }
 }

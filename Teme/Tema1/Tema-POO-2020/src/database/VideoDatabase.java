@@ -9,11 +9,11 @@ import fileio.SerialInputData;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class VideoDatabase {
-    private LinkedHashMap<String, Video> videoDatabase = new LinkedHashMap<>();
+public final class VideoDatabase {
+    private final LinkedHashMap<String, Video> videoDatabase = new LinkedHashMap<>();
 
-    public VideoDatabase(List<MovieInputData> movieData,
-                         List<SerialInputData> serialData) {
+    public VideoDatabase(final List<MovieInputData> movieData,
+                         final List<SerialInputData> serialData) {
         for (MovieInputData movieEntry : movieData) {
             Movie newMovie = new Movie();
             newMovie.readVideo(movieEntry);
@@ -29,10 +29,5 @@ public class VideoDatabase {
 
     public LinkedHashMap<String, Video> getVideoDatabase() {
         return videoDatabase;
-    }
-
-    // for debugging
-    public void printDatabase() {
-        videoDatabase.forEach((s, video) -> System.out.println(video));
     }
 }

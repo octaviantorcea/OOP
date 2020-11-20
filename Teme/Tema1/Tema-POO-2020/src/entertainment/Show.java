@@ -5,7 +5,7 @@ import fileio.ShowInput;
 
 import java.util.ArrayList;
 
-public class Show extends Video {
+public final class Show extends Video {
     private int nrSeasons;
     private int totalDuration;
     private ArrayList<Season> seasons = new ArrayList<>();
@@ -29,10 +29,10 @@ public class Show extends Video {
     }
 
     @Override
-    public void readVideo(ShowInput showInput) {
+    public void readVideo(final ShowInput showInput) {
         super.readVideo(showInput);
-        this.nrSeasons = ((SerialInputData)showInput).getNumberSeason();
-        this.seasons = ((SerialInputData)showInput).getSeasons();
+        this.nrSeasons = ((SerialInputData) showInput).getNumberSeason();
+        this.seasons = ((SerialInputData) showInput).getSeasons();
     }
 
     public ArrayList<Season> getSeasons() {
@@ -42,10 +42,10 @@ public class Show extends Video {
     // for debugging
     @Override
     public String toString() {
-        return super.toString() + "Show{" +
-                "nrSeasons=" + nrSeasons +
-                ", totalDuration=" + totalDuration +
-                ", seasons=" + seasons +
-                '}';
+        return super.toString() + "Show{"
+                + "nrSeasons=" + nrSeasons
+                + ", totalDuration=" + totalDuration
+                + ", seasons=" + seasons
+                + '}';
     }
 }

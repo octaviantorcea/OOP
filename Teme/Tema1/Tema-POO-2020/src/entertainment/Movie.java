@@ -5,9 +5,9 @@ import fileio.ShowInput;
 
 import java.util.ArrayList;
 
-public class Movie extends Video {
+public final class Movie extends Video {
     private int duration;
-    private ArrayList<Double> ratings = new ArrayList<>();
+    private final ArrayList<Double> ratings = new ArrayList<>();
 
     @Override
     public void calculateAverageRating() {
@@ -21,9 +21,9 @@ public class Movie extends Video {
     }
 
     @Override
-    public void readVideo(ShowInput showInput) {
+    public void readVideo(final ShowInput showInput) {
         super.readVideo(showInput);
-        this.duration = ((MovieInputData)showInput).getDuration();
+        this.duration = ((MovieInputData) showInput).getDuration();
     }
 
     public ArrayList<Double> getRatings() {
@@ -33,9 +33,9 @@ public class Movie extends Video {
     // for debugging
     @Override
     public String toString() {
-        return super.toString() + "Movie{" +
-                "duration=" + duration +
-                ", ratings=" + ratings +
-                '}';
+        return super.toString() + "Movie{"
+                + "duration=" + duration
+                + ", ratings=" + ratings
+                + '}';
     }
 }

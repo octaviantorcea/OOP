@@ -13,9 +13,10 @@ public abstract class Video {
     protected int nrOfFav = 0;
     protected Double avgRating = 0d;
     protected int duration = 0;
-    protected boolean isShow = false;
 
     public abstract void calculateAverageRating();
+
+    public abstract boolean isShow();
 
     public void readVideo(final ShowInput showInput) {
         this.title = showInput.getTitle();
@@ -50,6 +51,14 @@ public abstract class Video {
 
     public HashSet<String> getGenres() {
         return genres;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     // for debugging

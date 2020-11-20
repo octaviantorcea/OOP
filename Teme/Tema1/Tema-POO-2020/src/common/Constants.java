@@ -102,4 +102,6 @@ public final class Constants {
     public static final String SEARCH_REC = "SearchRecommendation ";
     public static final String QUERY_REZZ = "Query result: ";
     public static final String DESCENDING = "desc";
+    public static final String RATINGS = "ratings";
+    public static final String LONGEST = "longest";
 }

@@ -25,6 +25,11 @@ public final class Movie extends Video {
         this.duration = ((MovieInputData) showInput).getDuration();
     }
 
+    @Override
+    public boolean isShow() {
+        return false;
+    }
+
     public ArrayList<Double> getRatings() {
         return ratings;
     }

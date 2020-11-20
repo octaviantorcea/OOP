@@ -1,15 +1,15 @@
 package utils;
 
+import action.Action;
 import actor.ActorsAwards;
 import common.Constants;
 import entertainment.Genre;
+import entertainment.Video;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.User;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * The class contains static methods that helps with parsing.
@@ -138,6 +138,50 @@ public final class Utils {
         }
 
         toArray.append(users.get(users.size() - 1).getUsername()).append("]");
+
+        return toArray.toString();
+    }
+
+    /**
+     * Verify if a video respects all the filters (if any) of an action.
+     * @param video the video that needs to be verified
+     * @param action contains the filters
+     * @return true if video respects the filters, false otherwise
+     */
+    public static boolean isFiltered(final Video video, final Action action) {
+        List<String> years = action.getFilters().get(0);
+        List<String> genres = action.getFilters().get(1);
+
+        if (years.get(0) != null) {
+            if (!years.get(0).equals(((Integer) video.getYear()).toString())) {
+                return false;
+            }
+        }
+
+        if (genres.get(0) != null) {
+            return !(Collections.disjoint(genres, video.getGenres()));
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns a string representation of only the titles of videos from a list.
+     * @param videos the list of videos whose titles will be converted to string
+     * @return the string that contains only the titles of videos from a list
+     */
+    public static String videosTitle(final ArrayList<Video> videos) {
+        if (videos.isEmpty()) {
+            return "[]";
+        }
+
+        StringBuilder toArray = new StringBuilder("[");
+
+        for (int i = 0; i < videos.size() - 1; i++) {
+            toArray.append(videos.get(i).getTitle()).append(", ");
+        }
+
+        toArray.append(videos.get(videos.size() - 1).getTitle()).append("]");
 
         return toArray.toString();
     }

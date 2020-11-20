@@ -93,6 +93,14 @@ public final class Main {
         actorDatabase.printActorData();
         System.out.println();
         actionDatabase.printActionData();*/
+//        for (Action action : actionDatabase.getActionsDatabase()) {
+//            System.out.println(action.getFilters() + " " + action.getFilters().size());
+//            if (action.getFilters().size() > 0) {
+//               if (action.getFilters().get(0).get(0) == null) {
+//                   System.out.println(":fssdfsdf");
+//               }
+//            }
+//        }
 
         fileWriter.closeJSON(arrayResult);
     }

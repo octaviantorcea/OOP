@@ -36,8 +36,11 @@ public final class Show extends Video {
         for (Season season : this.seasons) {
             this.duration += season.getDuration();
         }
+    }
 
-        this.isShow = true;
+    @Override
+    public boolean isShow() {
+        return true;
     }
 
     public ArrayList<Season> getSeasons() {

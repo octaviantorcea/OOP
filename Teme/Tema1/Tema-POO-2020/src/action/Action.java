@@ -12,35 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static common.Constants.ADDED_FAV;
-import static common.Constants.ALREADY_FAV;
-import static common.Constants.ALREADY_RATED;
-import static common.Constants.BEST_UNSEEN;
-import static common.Constants.BEST_UNSEEN_REC;
-import static common.Constants.BY;
-import static common.Constants.CANT_APPLY;
-import static common.Constants.COMMAND;
-import static common.Constants.DESCENDING;
-import static common.Constants.ERROR;
-import static common.Constants.FAVORITE;
-import static common.Constants.FAV_REC;
-import static common.Constants.NOT_SEEN;
-import static common.Constants.POPULAR;
-import static common.Constants.POPULAR_REC;
-import static common.Constants.QUERY;
-import static common.Constants.QUERY_REZZ;
-import static common.Constants.RATING;
-import static common.Constants.RECOMMENDATION;
-import static common.Constants.REZZ;
-import static common.Constants.SEARCH;
-import static common.Constants.SEARCH_REC;
-import static common.Constants.STANDARD;
-import static common.Constants.STANDARD_REC;
-import static common.Constants.SUCCESS;
-import static common.Constants.USERS;
-import static common.Constants.VIEW;
-import static common.Constants.WAS_RATED;
-import static common.Constants.WAS_VIEWED;
+import static common.Constants.*;
 
 public class Action {
     private final int actionId;
@@ -122,6 +94,88 @@ public class Action {
                 }
             }
         } else if (QUERY.equals(this.actionType)) {
+            if (RATINGS.equals(this.criteria)) {
+                if (MOVIES.equals(this.objectType)) {
+                    ArrayList<Video> ratedMovies = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (!video.isShow() && video.getAvgRating() > 0
+                                && Utils.isFiltered(video, this)) {
+                            ratedMovies.add(video);
+                        }
+                    }
+
+                    return getRatedVideos(ratedMovies);
+                }
+
+                if (SHOWS.equals(this.objectType)) {
+                    ArrayList<Video> ratedShows = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (video.isShow() && video.getAvgRating() > 0
+                                && Utils.isFiltered(video, this)) {
+                            ratedShows.add(video);
+                        }
+                    }
+
+                    return getRatedVideos(ratedShows);
+                }
+            }
+
+            if (FAVORITE.equals(this.criteria)) {
+                if (MOVIES.equals(this.objectType)) {
+                    ArrayList<Video> favMovies = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (!video.isShow() && video.getNrOfFav() > 0
+                                && Utils.isFiltered(video, this)) {
+                            favMovies.add(video);
+                        }
+                    }
+
+                    return getFavVideos(favMovies);
+                }
+
+                if (SHOWS.equals(this.objectType)) {
+                    ArrayList<Video> favShows = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (video.isShow() && video.getNrOfFav() > 0
+                                && Utils.isFiltered(video, this)) {
+                            favShows.add(video);
+                        }
+                    }
+
+                    return getFavVideos(favShows);
+                }
+            }
+
+            if (LONGEST.equals(this.criteria)) {
+                if (MOVIES.equals(this.objectType)) {
+                    ArrayList<Video> longestMovies = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (!video.isShow() && Utils.isFiltered(video, this)) {
+                            longestMovies.add(video);
+                        }
+                    }
+
+                    return getLongVideos(longestMovies);
+                }
+
+                if (SHOWS.equals(this.objectType)) {
+                    ArrayList<Video> longestShows = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (video.isShow() && Utils.isFiltered(video, this)) {
+                            longestShows.add(video);
+                        }
+                    }
+
+                    return getLongVideos(longestShows);
+                }
+            }
+
             if (USERS.equals(this.objectType)) {
                 ArrayList<User> users = new ArrayList<>();
 
@@ -141,12 +195,12 @@ public class Action {
                     }
                 });
 
-                while (this.number < users.size()) {
-                    users.remove(this.number);
-                }
-
                 if (this.sortType.equals(DESCENDING)) {
                     Collections.reverse(users);
+                }
+
+                while (this.number < users.size()) {
+                    users.remove(this.number);
                 }
 
                 return QUERY_REZZ + Utils.usernamesToString(users);
@@ -247,6 +301,72 @@ public class Action {
         return "";
     }
 
+    private String getLongVideos(ArrayList<Video> longestVideos) {
+        longestVideos.sort((video1, video2) -> {
+            int compare = video1.getDuration() - video2.getDuration();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(longestVideos);
+        }
+
+        while (this.number < longestVideos.size()) {
+            longestVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(longestVideos);
+    }
+
+    private String getFavVideos(ArrayList<Video> favVideos) {
+        favVideos.sort((video1, video2) -> {
+            int compare = video1.getNrOfFav() - video2.getNrOfFav();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(favVideos);
+        }
+
+        while (this.number < favVideos.size()) {
+            favVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(favVideos);
+    }
+
+    private String getRatedVideos(ArrayList<Video> ratedVideos) {
+        ratedVideos.sort((video1, video2) -> {
+            int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(ratedVideos);
+        }
+
+        while (this.number < ratedVideos.size()) {
+            ratedVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(ratedVideos);
+    }
+
     public int getActionId() {
         return actionId;
     }
@@ -269,5 +389,10 @@ public class Action {
                 + ", seasonNumber=" + seasonNumber
                 + ", filters=" + filters
                 + '}';
+    }
+
+    // debugging
+    public List<List<String>> getFilters() {
+        return filters;
     }
 }

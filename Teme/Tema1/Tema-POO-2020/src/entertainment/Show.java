@@ -20,8 +20,12 @@ public final class Show extends Video {
                 seasonSum += rating;
             }
 
-            seasonSum /= season.getRatings().size();
-            sum += seasonSum;
+            if (seasonSum == 0) {
+                sum = 0;
+            } else {
+                seasonSum /= season.getRatings().size();
+                sum += seasonSum;
+            }
         }
 
         this.avgRating = sum / this.nrSeasons;

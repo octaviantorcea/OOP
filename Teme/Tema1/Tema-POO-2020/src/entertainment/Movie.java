@@ -16,7 +16,11 @@ public final class Movie extends Video {
             sum += rating;
         }
 
-        this.avgRating = sum / ratings.size();
+        if (ratings.isEmpty()) {
+            this.avgRating = 0d;
+        } else {
+            this.avgRating = sum / ratings.size();
+        }
     }
 
     @Override

@@ -43,6 +43,18 @@ public final class Actor {
         return awards;
     }
 
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public HashSet<String> getFilmography() {
+        return filmography;
+    }
+
     // for debugging
     @Override
     public String toString() {

@@ -96,6 +96,43 @@ public class Action {
                 }
             }
         } else if (QUERY.equals(this.actionType)) {
+            if (AVERAGE.equals(this.criteria)) {
+                actorDatabase.getActorDatabase().values().forEach(actor ->
+                        Utils.computeActorGrade(actor, videoDatabase));
+
+                ArrayList<Actor> actors = new ArrayList<>();
+
+                actorDatabase.getActorDatabase().values().forEach(actor -> {
+                    if (actor.getAverageRating() > 0) {
+                        actors.add(actor);
+                    }
+                });
+
+                actors.sort((actor1, actor2) -> {
+                    int compute = actor1.getAverageRating().compareTo(actor2.getAverageRating());
+
+                    if (compute != 0) {
+                        return compute;
+                    } else {
+                        return actor1.getName().compareTo(actor2.getName());
+                    }
+                });
+
+                if (this.sortType.equals(DESCENDING)) {
+                    Collections.reverse(actors);
+                }
+
+                while (this.number < actors.size()) {
+                    actors.remove(this.number);
+                }
+
+                ArrayList<String> actorsNames = new ArrayList<>();
+
+                actors.forEach(actor -> actorsNames.add(actor.getName()));
+
+                return QUERY_REZZ + actorsNames;
+            }
+
             if (AWARDS.equals(this.criteria)) {
                 ArrayList<String> actorsNames = new ArrayList<>();
                 ArrayList<Actor> actors = new ArrayList<>();

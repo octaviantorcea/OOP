@@ -1,8 +1,10 @@
 package utils;
 
 import action.Action;
+import actor.Actor;
 import actor.ActorsAwards;
 import common.Constants;
+import database.VideoDatabase;
 import entertainment.Genre;
 import entertainment.Video;
 import org.json.simple.JSONArray;
@@ -194,5 +196,25 @@ public final class Utils {
     public static ArrayList<String> stringToArray(String string) {
         string = string.replaceAll("[^a-zA-Z0-9] ", " ").replaceAll("\\.", "").toLowerCase();
         return new ArrayList<>(Arrays.asList(string.split(" ")));
+    }
+
+    public static void computeActorGrade(Actor actor, VideoDatabase videoDatabase) {
+        double sumGrade = 0;
+        int ratedVideos = 0;
+
+        for (String title : actor.getFilmography()) {
+            Video video = videoDatabase.getVideoDatabase().get(title);
+
+            if (video != null && video.getAvgRating() > 0) {
+                sumGrade += video.getAvgRating();
+                ratedVideos++;
+            }
+        }
+
+        if (sumGrade == 0) {
+            actor.setAverageRating(0d);
+        } else {
+            actor.setAverageRating(sumGrade / ratedVideos);
+        }
     }
 }

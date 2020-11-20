@@ -12,7 +12,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static common.Constants.*;
+import static common.Constants.ADDED_FAV;
+import static common.Constants.ALREADY_FAV;
+import static common.Constants.ALREADY_RATED;
+import static common.Constants.BEST_UNSEEN;
+import static common.Constants.BEST_UNSEEN_REC;
+import static common.Constants.BY;
+import static common.Constants.CANT_APPLY;
+import static common.Constants.COMMAND;
+import static common.Constants.DESCENDING;
+import static common.Constants.ERROR;
+import static common.Constants.FAVORITE;
+import static common.Constants.FAV_REC;
+import static common.Constants.LONGEST;
+import static common.Constants.MOST_VIEWED;
+import static common.Constants.MOVIES;
+import static common.Constants.NOT_SEEN;
+import static common.Constants.POPULAR;
+import static common.Constants.POPULAR_REC;
+import static common.Constants.QUERY;
+import static common.Constants.QUERY_REZZ;
+import static common.Constants.RATING;
+import static common.Constants.RATINGS;
+import static common.Constants.RECOMMENDATION;
+import static common.Constants.REZZ;
+import static common.Constants.SEARCH;
+import static common.Constants.SEARCH_REC;
+import static common.Constants.SHOWS;
+import static common.Constants.STANDARD;
+import static common.Constants.STANDARD_REC;
+import static common.Constants.SUCCESS;
+import static common.Constants.USERS;
+import static common.Constants.VIEW;
+import static common.Constants.WAS_RATED;
+import static common.Constants.WAS_VIEWED;
 
 public class Action {
     private final int actionId;
@@ -176,6 +209,34 @@ public class Action {
                 }
             }
 
+            if (MOST_VIEWED.equals(this.criteria)) {
+                if (MOVIES.equals(this.objectType)) {
+                    ArrayList<Video> mostViewedMovies = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (!video.isShow() && video.getViews() > 0
+                                && Utils.isFiltered(video, this)) {
+                            mostViewedMovies.add(video);
+                        }
+                    }
+
+                    return getMostViewedVideo(mostViewedMovies);
+                }
+
+                if (SHOWS.equals(this.objectType)) {
+                    ArrayList<Video> mostViewedShows = new ArrayList<>();
+
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (video.isShow() && video.getViews() > 0
+                                && Utils.isFiltered(video, this)) {
+                            mostViewedShows.add(video);
+                        }
+                    }
+
+                    return getMostViewedVideo(mostViewedShows);
+                }
+            }
+
             if (USERS.equals(this.objectType)) {
                 ArrayList<User> users = new ArrayList<>();
 
@@ -299,6 +360,28 @@ public class Action {
         }
 
         return "";
+    }
+
+    private String getMostViewedVideo(ArrayList<Video> mostViewedVideos) {
+        mostViewedVideos.sort((video1, video2) -> {
+            int compare = video1.getViews() - video2.getViews();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(mostViewedVideos);
+        }
+
+        while (this.number < mostViewedVideos.size()) {
+            mostViewedVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(mostViewedVideos);
     }
 
     private String getLongVideos(ArrayList<Video> longestVideos) {

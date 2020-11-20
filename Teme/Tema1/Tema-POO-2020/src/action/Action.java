@@ -1,6 +1,7 @@
 package action;
 
 import actor.Actor;
+import actor.ActorsAwards;
 import database.ActorDatabase;
 import database.UserDatabase;
 import database.VideoDatabase;
@@ -95,6 +96,38 @@ public class Action {
                 }
             }
         } else if (QUERY.equals(this.actionType)) {
+            if (AWARDS.equals(this.criteria)) {
+                ArrayList<String> actorsNames = new ArrayList<>();
+                ArrayList<Actor> actors = new ArrayList<>();
+                ArrayList<ActorsAwards> awards = new ArrayList<>();
+
+                getFilters().get(3).forEach(string -> awards.add(Utils.stringToAwards(string)));
+
+                for (Actor actor : actorDatabase.getActorDatabase().values()) {
+                    if (actor.getAwards().keySet().containsAll(awards)) {
+                        actors.add(actor);
+                    }
+                }
+
+                actors.sort((actor1, actor2) -> {
+                    int compare = actor1.getTotalAwards() - actor2.getTotalAwards();
+
+                    if (compare != 0) {
+                        return compare;
+                    } else {
+                        return actor1.getName().compareTo(actor2.getName());
+                    }
+                });
+
+                if (this.sortType.equals(DESCENDING)) {
+                    Collections.reverse(actors);
+                }
+
+                actors.forEach(actor -> actorsNames.add(actor.getName()));
+
+                return QUERY_REZZ + actorsNames;
+            }
+
             if (FILTER_DESCRIPTIONS.equals(this.criteria)) {
                 ArrayList<String> actors = new ArrayList<>();
                 ArrayList<String> filterWords = new ArrayList<>(this.getFilters().get(2));

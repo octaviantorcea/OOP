@@ -9,11 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The class contains static methods that helps with parsing.
@@ -188,5 +184,15 @@ public final class Utils {
         toArray.append(videos.get(videos.size() - 1).getTitle()).append("]");
 
         return toArray.toString();
+    }
+
+    /**
+     * Transforms a string to a string array that contains only the words from the string (all lowercase).
+     * @param string the string that will be transformed.
+     * @return the array of strings
+     */
+    public static ArrayList<String> stringToArray(String string) {
+        string = string.replaceAll("[^a-zA-Z0-9] ", " ").replaceAll("\\.", "").toLowerCase();
+        return new ArrayList<>(Arrays.asList(string.split(" ")));
     }
 }

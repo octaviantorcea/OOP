@@ -23,6 +23,10 @@ public final class Actor {
         return name;
     }
 
+    public String getCareerDescription() {
+        return careerDescription;
+    }
+
     // for debugging
     @Override
     public String toString() {

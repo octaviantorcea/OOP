@@ -1,5 +1,6 @@
 package action;
 
+import actor.Actor;
 import database.ActorDatabase;
 import database.UserDatabase;
 import database.VideoDatabase;
@@ -12,40 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static common.Constants.ADDED_FAV;
-import static common.Constants.ALREADY_FAV;
-import static common.Constants.ALREADY_RATED;
-import static common.Constants.BEST_UNSEEN;
-import static common.Constants.BEST_UNSEEN_REC;
-import static common.Constants.BY;
-import static common.Constants.CANT_APPLY;
-import static common.Constants.COMMAND;
-import static common.Constants.DESCENDING;
-import static common.Constants.ERROR;
-import static common.Constants.FAVORITE;
-import static common.Constants.FAV_REC;
-import static common.Constants.LONGEST;
-import static common.Constants.MOST_VIEWED;
-import static common.Constants.MOVIES;
-import static common.Constants.NOT_SEEN;
-import static common.Constants.POPULAR;
-import static common.Constants.POPULAR_REC;
-import static common.Constants.QUERY;
-import static common.Constants.QUERY_REZZ;
-import static common.Constants.RATING;
-import static common.Constants.RATINGS;
-import static common.Constants.RECOMMENDATION;
-import static common.Constants.REZZ;
-import static common.Constants.SEARCH;
-import static common.Constants.SEARCH_REC;
-import static common.Constants.SHOWS;
-import static common.Constants.STANDARD;
-import static common.Constants.STANDARD_REC;
-import static common.Constants.SUCCESS;
-import static common.Constants.USERS;
-import static common.Constants.VIEW;
-import static common.Constants.WAS_RATED;
-import static common.Constants.WAS_VIEWED;
+import static common.Constants.*;
 
 public class Action {
     private final int actionId;
@@ -127,6 +95,29 @@ public class Action {
                 }
             }
         } else if (QUERY.equals(this.actionType)) {
+            if (FILTER_DESCRIPTIONS.equals(this.criteria)) {
+                ArrayList<String> actors = new ArrayList<>();
+                ArrayList<String> filterWords = new ArrayList<>(this.getFilters().get(2));
+
+                for (Actor actor : actorDatabase.getActorDatabase().values()) {
+
+                    ArrayList<String> careerDescription;
+                    careerDescription = Utils.stringToArray(actor.getCareerDescription());
+
+                    if (careerDescription.containsAll(filterWords)) {
+                        actors.add(actor.getName());
+                    }
+                }
+
+                actors.sort(String::compareTo);
+
+                if (this.sortType.equals(DESCENDING)) {
+                    Collections.reverse(actors);
+                }
+
+                return QUERY_REZZ + actors;
+            }
+
             if (RATINGS.equals(this.criteria)) {
                 if (MOVIES.equals(this.objectType)) {
                     ArrayList<Video> ratedMovies = new ArrayList<>();

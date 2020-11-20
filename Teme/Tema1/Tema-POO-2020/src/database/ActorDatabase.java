@@ -15,4 +15,8 @@ public final class ActorDatabase {
             actorDatabase.put(newActor.getName(), newActor);
         }
     }
+
+    public HashMap<String, Actor> getActorDatabase() {
+        return actorDatabase;
+    }
 }

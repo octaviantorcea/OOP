@@ -14,8 +14,14 @@ public abstract class Video {
     protected Double avgRating = 0d;
     protected int duration = 0;
 
+    /**
+     * Calculates the average rating of a video.
+     */
     public abstract void calculateAverageRating();
 
+    /**
+     * @return true if it's a show, false otherwise
+     */
     public abstract boolean isShow();
 
     public Video(final ShowInput showInput) {

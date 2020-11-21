@@ -6,8 +6,8 @@ import fileio.ShowInput;
 import java.util.ArrayList;
 
 public final class Show extends Video {
-    private int nrSeasons;
-    private ArrayList<Season> seasons = new ArrayList<>();
+    private final int nrSeasons;
+    private final ArrayList<Season> seasons;
 
     @Override
     public void calculateAverageRating() {

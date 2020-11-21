@@ -231,7 +231,7 @@ public final class Utils {
     }
 
     /**
-     * Transforms a Genre into a string
+     * Transforms a Genre into a string.
      * @param genre of video
      * @return a string
      */

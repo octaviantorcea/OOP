@@ -19,7 +19,7 @@ import java.util.List;
 
 import static common.Constants.*;
 
-public class Action {
+public final class Action {
     private final int actionId;
     private final String actionType;
     private final String type;
@@ -50,7 +50,7 @@ public class Action {
         this.filters = actionData.getFilters();
     }
 
-    public final String executeAction(final ActorDatabase actorDatabase,
+    public String executeAction(final ActorDatabase actorDatabase,
                                 final UserDatabase userDatabase,
                                 final VideoDatabase videoDatabase,
                                 final GenreDatabase genreDatabase) {
@@ -66,11 +66,11 @@ public class Action {
         };
     }
 
-    public final int getActionId() {
+    public int getActionId() {
         return actionId;
     }
 
-    public final List<List<String>> getFilters() {
+    public List<List<String>> getFilters() {
         return filters;
     }
 
@@ -152,7 +152,7 @@ public class Action {
     private String averageQuery(final ActorDatabase actorDatabase,
                                 final VideoDatabase videoDatabase) {
         actorDatabase.getActorDatabase().values().forEach(actor ->
-                Utils.computeActorGrade(actor, videoDatabase));
+                actor.computeActorGrade(videoDatabase));
 
         ArrayList<Actor> actors = new ArrayList<>();
 

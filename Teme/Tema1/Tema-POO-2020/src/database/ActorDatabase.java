@@ -6,6 +6,10 @@ import fileio.ActorInputData;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * An hashmap that contains all the actors.<br>
+ * Maps the name of the actor to an "Actor"object.
+ */
 public final class ActorDatabase {
     private final HashMap<String, Actor> actorDatabase = new HashMap<>();
 

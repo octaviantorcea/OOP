@@ -6,6 +6,10 @@ import user.User;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Contains all the users.<br>
+ * Maps the username to the an "User" object.
+ */
 public final class UserDatabase {
     private final HashMap<String, User> userDatabase = new HashMap<>();
 

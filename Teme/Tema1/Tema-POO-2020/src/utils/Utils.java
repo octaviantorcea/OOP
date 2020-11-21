@@ -1,10 +1,8 @@
 package utils;
 
 import action.Action;
-import actor.Actor;
 import actor.ActorsAwards;
 import common.Constants;
-import database.VideoDatabase;
 import entertainment.Genre;
 import entertainment.Video;
 import org.json.simple.JSONArray;
@@ -202,32 +200,6 @@ public final class Utils {
     public static ArrayList<String> stringToArray(final String string) {
         String auxStr = string.replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\.", "").toLowerCase();
         return new ArrayList<>(Arrays.asList(auxStr.split(" ")));
-    }
-
-    /**
-     * Computes the average grade for an Actor.<br>
-     * Only videos that are graded are considered.
-     * @param actor actor whose grade will be calculated
-     * @param videoDatabase the video database
-     */
-    public static void computeActorGrade(final Actor actor, final VideoDatabase videoDatabase) {
-        double sumGrade = 0;
-        int ratedVideos = 0;
-
-        for (String title : actor.getFilmography()) {
-            Video video = videoDatabase.getVideoDatabase().get(title);
-
-            if (video != null && video.getAvgRating() > 0) {
-                sumGrade += video.getAvgRating();
-                ratedVideos++;
-            }
-        }
-
-        if (ratedVideos == 0) {
-            actor.setAverageRating(0d);
-        } else {
-            actor.setAverageRating(sumGrade / ratedVideos);
-        }
     }
 
     /**

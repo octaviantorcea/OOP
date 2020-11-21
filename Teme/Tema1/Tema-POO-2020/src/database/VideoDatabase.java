@@ -9,6 +9,11 @@ import fileio.SerialInputData;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Contains all the videos.<br>
+ * Videos are stored in the order they are given.<br>
+ * Maps the title of the video to a "Video" object.
+ */
 public final class VideoDatabase {
     private final LinkedHashMap<String, Video> videoDatabase = new LinkedHashMap<>();
 

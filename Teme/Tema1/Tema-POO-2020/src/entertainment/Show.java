@@ -5,10 +5,27 @@ import fileio.ShowInput;
 
 import java.util.ArrayList;
 
+/**
+ * Contains information about a show.
+ */
 public final class Show extends Video {
     private final int nrSeasons;
     private final ArrayList<Season> seasons;
 
+    public Show(final ShowInput showInput) {
+        super(showInput);
+        this.nrSeasons = ((SerialInputData) showInput).getNumberSeason();
+        this.seasons = ((SerialInputData) showInput).getSeasons();
+
+        for (Season season : this.seasons) {
+            this.duration += season.getDuration();
+        }
+    }
+
+    /**
+     * Computes the average rating of a show.<br>
+     * It's the sum of all the average ratings of the seasons that show has.
+     */
     @Override
     public void calculateAverageRating() {
         double sum = 0d;
@@ -31,16 +48,6 @@ public final class Show extends Video {
         this.avgRating = sum / this.nrSeasons;
     }
 
-    public Show(final ShowInput showInput) {
-        super(showInput);
-        this.nrSeasons = ((SerialInputData) showInput).getNumberSeason();
-        this.seasons = ((SerialInputData) showInput).getSeasons();
-
-        for (Season season : this.seasons) {
-            this.duration += season.getDuration();
-        }
-    }
-
     @Override
     public boolean isShow() {
         return true;
@@ -48,14 +55,5 @@ public final class Show extends Video {
 
     public ArrayList<Season> getSeasons() {
         return seasons;
-    }
-
-    // for debugging
-    @Override
-    public String toString() {
-        return super.toString() + "Show{"
-                + "nrSeasons=" + nrSeasons
-                + ", seasons=" + seasons
-                + '}';
     }
 }

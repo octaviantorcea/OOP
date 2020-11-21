@@ -4,12 +4,19 @@ import fileio.ShowInput;
 
 import java.util.HashSet;
 
+/**
+ * Provides the skeleton for the "Movie" and "Show classes.<br>
+ * Contains common members such as title, year, number of views, etc...
+ */
 public abstract class Video {
     protected String title;
     protected int year;
     protected HashSet<String> actors = new HashSet<>();
     protected HashSet<String> genres = new HashSet<>();
     protected int views = 0;
+    /**
+     * Number of times a video has been added to favorites.
+     */
     protected int nrOfFav = 0;
     protected Double avgRating = 0d;
     protected int duration = 0;

@@ -14,14 +14,34 @@ import static common.Constants.PREMIUM;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * Contains info about an user.
+ */
 public final class User {
     private final String username;
     private final boolean subscription;
     private final HashSet<Video> favVideos = new HashSet<>();
     private final HashMap<Video, Integer> viewedList = new HashMap<>();
+    /**
+     * The number of times this user has rated a video.
+     */
     private int nrOfRatings = 0;
+    /**
+     * List of movies this user has rated.
+     */
     private final HashSet<String> ratedMovies = new HashSet<>();
+    /**
+     * List of shows this user has rated.
+     */
     private final HashSet<String> ratedShows = new HashSet<>();
+
+    public User(final UserInputData userData, final VideoDatabase videoDatabase,
+                final GenreDatabase genreDatabase) {
+        this.username = userData.getUsername();
+        this.subscription = readSubscription(userData);
+        readFavVideos(userData, videoDatabase);
+        readViewedList(userData, videoDatabase, genreDatabase);
+    }
 
     private boolean readSubscription(final UserInputData userData) {
         if (userData.getSubscriptionType().equals(BASIC)) {
@@ -73,7 +93,7 @@ public final class User {
      * Increments the number of times that user rated a video.<br>
      * Adds the movie in the list of rated movies.<br>
      * Adds the grade in the list of grades of that movie.<br>
-     * Computes the new avgRating oh that movie.
+     * Computes the new avgRating of that movie.
      * @param movie the movie that is rated
      * @param rating the grade that is attributed to the movie
      */
@@ -99,14 +119,6 @@ public final class User {
         ratedShows.add(show.getTitle() + season);
         ((Show) show).getSeasons().get(season - 1).getRatings().add(rating);
         show.calculateAverageRating();
-    }
-
-    public User(final UserInputData userData, final VideoDatabase videoDatabase,
-                final GenreDatabase genreDatabase) {
-        this.username = userData.getUsername();
-        this.subscription = readSubscription(userData);
-        readFavVideos(userData, videoDatabase);
-        readViewedList(userData, videoDatabase, genreDatabase);
     }
 
     public String getUsername() {

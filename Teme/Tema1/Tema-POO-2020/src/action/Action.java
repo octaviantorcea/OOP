@@ -66,94 +66,6 @@ public class Action {
         };
     }
 
-    private String getMostViewedVideos(final ArrayList<Video> mostViewedVideos) {
-        mostViewedVideos.sort((video1, video2) -> {
-            int compare = video1.getViews() - video2.getViews();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(mostViewedVideos);
-        }
-
-        while (this.number < mostViewedVideos.size()) {
-            mostViewedVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(mostViewedVideos);
-    }
-
-    private String getLongVideos(final ArrayList<Video> longestVideos) {
-        longestVideos.sort((video1, video2) -> {
-            int compare = video1.getDuration() - video2.getDuration();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(longestVideos);
-        }
-
-        while (this.number < longestVideos.size()) {
-            longestVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(longestVideos);
-    }
-
-    private String getFavVideos(final ArrayList<Video> favVideos) {
-        favVideos.sort((video1, video2) -> {
-            int compare = video1.getNrOfFav() - video2.getNrOfFav();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(favVideos);
-        }
-
-        while (this.number < favVideos.size()) {
-            favVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(favVideos);
-    }
-
-    private String getRatedVideos(final ArrayList<Video> ratedVideos) {
-        ratedVideos.sort((video1, video2) -> {
-            int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(ratedVideos);
-        }
-
-        while (this.number < ratedVideos.size()) {
-            ratedVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(ratedVideos);
-    }
-
     public final int getActionId() {
         return actionId;
     }
@@ -204,7 +116,7 @@ public class Action {
         if (!user.getViewedList().containsKey(video)) {
             return ERROR + video.getTitle() + NOT_SEEN;
         } else {
-            if (this.seasonNumber == 0) { // then it's a movie
+            if (this.seasonNumber == 0) {
                 if (user.getRatedMovies().contains(this.title)) {
                     return ERROR + video.getTitle() + ALREADY_RATED;
                 } else {
@@ -590,5 +502,93 @@ public class Action {
             Collections.sort(searchRec);
             return SEARCH_REC + REZZ + searchRec;
         }
+    }
+
+    private String getMostViewedVideos(final ArrayList<Video> mostViewedVideos) {
+        mostViewedVideos.sort((video1, video2) -> {
+            int compare = video1.getViews() - video2.getViews();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(mostViewedVideos);
+        }
+
+        while (this.number < mostViewedVideos.size()) {
+            mostViewedVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(mostViewedVideos);
+    }
+
+    private String getLongVideos(final ArrayList<Video> longestVideos) {
+        longestVideos.sort((video1, video2) -> {
+            int compare = video1.getDuration() - video2.getDuration();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(longestVideos);
+        }
+
+        while (this.number < longestVideos.size()) {
+            longestVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(longestVideos);
+    }
+
+    private String getFavVideos(final ArrayList<Video> favVideos) {
+        favVideos.sort((video1, video2) -> {
+            int compare = video1.getNrOfFav() - video2.getNrOfFav();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(favVideos);
+        }
+
+        while (this.number < favVideos.size()) {
+            favVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(favVideos);
+    }
+
+    private String getRatedVideos(final ArrayList<Video> ratedVideos) {
+        ratedVideos.sort((video1, video2) -> {
+            int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return video1.getTitle().compareTo(video2.getTitle());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(ratedVideos);
+        }
+
+        while (this.number < ratedVideos.size()) {
+            ratedVideos.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.videosTitle(ratedVideos);
     }
 }

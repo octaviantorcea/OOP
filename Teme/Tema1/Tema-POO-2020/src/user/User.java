@@ -136,16 +136,4 @@ public final class User {
     public int getNrOfRatings() {
         return nrOfRatings;
     }
-
-    // for debugging
-    @Override
-    public String toString() {
-        return "User{"
-                + "username='" + username + '\''
-                + ", subscription=" + subscription
-                + ", favVideos=" + favVideos
-                + ", viewedList=" + viewedList
-                + ", nrOfRatings=" + nrOfRatings
-                + '}';
-    }
 }

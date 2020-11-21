@@ -21,7 +21,7 @@ public final class Show extends Video {
             }
 
             if (seasonSum == 0) {
-                sum = 0;
+                sum += 0;
             } else {
                 seasonSum /= season.getRatings().size();
                 sum += seasonSum;

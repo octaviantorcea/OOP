@@ -211,7 +211,7 @@ public final class Utils {
             }
         }
 
-        if (sumGrade == 0) {
+        if (ratedVideos == 0) {
             actor.setAverageRating(0d);
         } else {
             actor.setAverageRating(sumGrade / ratedVideos);

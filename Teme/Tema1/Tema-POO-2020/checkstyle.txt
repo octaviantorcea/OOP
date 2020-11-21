@@ -1,21 +1,6 @@
 Starting audit...
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:20:31: Using the '.*' form of import should be avoided - common.Constants.*. [AvoidStarImport]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:53:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'executeAction' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'executeAction' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:53:5: Method length is 246 lines (max allowed is 150). [MethodLength]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:53:5: Missing a Javadoc comment. [MissingJavadocMethod]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:54: Line is longer than 100 characters (found 103). [LineLength]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:103:34: '3' is a magic number. [MagicNumber]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:301:40: Parameter mostViewedVideos should be final. [FinalParameters]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:323:34: Parameter longestVideos should be final. [FinalParameters]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:345:33: Parameter favVideos should be final. [FinalParameters]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:367:35: Parameter ratedVideos should be final. [FinalParameters]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:389:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'getActionId' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'getActionId' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:393:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'getFilters' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'getFilters' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:422: Line is longer than 100 characters (found 107). [LineLength]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:422:35: 'genre' hides a field. [HiddenField]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:515: Line is longer than 100 characters (found 102). [LineLength]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:515:48: 'genre' hides a field. [HiddenField]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:519:27: 'genre' hides a field. [HiddenField]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:522:21: 'genre' hides a field. [HiddenField]
+[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:528:20: 'genre' hides a field. [HiddenField]
 Audit done.
-Checkstyle ends with 18 errors.
+Checkstyle ends with 3 errors.

@@ -50,255 +50,23 @@ public class Action {
         this.filters = actionData.getFilters();
     }
 
-    public String executeAction(final ActorDatabase actorDatabase, final UserDatabase userDatabase,
-                                final VideoDatabase videoDatabase, final GenreDatabase genreDatabase) {
-        if (COMMAND.equals(this.actionType)) {
-            User user = userDatabase.getUserDatabase().get(this.username);
-            Video video = videoDatabase.getVideoDatabase().get(this.title);
+    public final String executeAction(final ActorDatabase actorDatabase,
+                                final UserDatabase userDatabase,
+                                final VideoDatabase videoDatabase,
+                                final GenreDatabase genreDatabase) {
 
-            return command(user, video, genreDatabase);
-        } else if (QUERY.equals(this.actionType)) {
-            if (AVERAGE.equals(this.criteria)) {
-                actorDatabase.getActorDatabase().values().forEach(actor ->
-                        Utils.computeActorGrade(actor, videoDatabase));
+        User user = userDatabase.getUserDatabase().get(this.username);
+        Video video = videoDatabase.getVideoDatabase().get(this.title);
 
-                ArrayList<Actor> actors = new ArrayList<>();
-
-                actorDatabase.getActorDatabase().values().forEach(actor -> {
-                    if (actor.getAverageRating() > 0) {
-                        actors.add(actor);
-                    }
-                });
-
-                actors.sort((actor1, actor2) -> {
-                    int compute = actor1.getAverageRating().compareTo(actor2.getAverageRating());
-
-                    if (compute != 0) {
-                        return compute;
-                    } else {
-                        return actor1.getName().compareTo(actor2.getName());
-                    }
-                });
-
-                if (this.sortType.equals(DESCENDING)) {
-                    Collections.reverse(actors);
-                }
-
-                while (this.number < actors.size()) {
-                    actors.remove(this.number);
-                }
-
-                ArrayList<String> actorsNames = new ArrayList<>();
-
-                actors.forEach(actor -> actorsNames.add(actor.getName()));
-
-                return QUERY_REZZ + actorsNames;
-            }
-
-            if (AWARDS.equals(this.criteria)) {
-                ArrayList<String> actorsNames = new ArrayList<>();
-                ArrayList<Actor> actors = new ArrayList<>();
-                ArrayList<ActorsAwards> awards = new ArrayList<>();
-
-                this.filters.get(3).forEach(string -> awards.add(Utils.stringToAwards(string)));
-
-                for (Actor actor : actorDatabase.getActorDatabase().values()) {
-                    if (actor.getAwards().keySet().containsAll(awards)) {
-                        actors.add(actor);
-                    }
-                }
-
-                actors.sort((actor1, actor2) -> {
-                    int compare = actor1.getTotalAwards() - actor2.getTotalAwards();
-
-                    if (compare != 0) {
-                        return compare;
-                    } else {
-                        return actor1.getName().compareTo(actor2.getName());
-                    }
-                });
-
-                if (this.sortType.equals(DESCENDING)) {
-                    Collections.reverse(actors);
-                }
-
-                actors.forEach(actor -> actorsNames.add(actor.getName()));
-
-                return QUERY_REZZ + actorsNames;
-            }
-
-            if (FILTER_DESCRIPTIONS.equals(this.criteria)) {
-                ArrayList<String> actors = new ArrayList<>();
-                ArrayList<String> filterWords = new ArrayList<>(this.filters.get(2));
-
-                for (Actor actor : actorDatabase.getActorDatabase().values()) {
-
-                    ArrayList<String> careerDescription;
-                    careerDescription = Utils.stringToArray(actor.getCareerDescription());
-
-                    if (careerDescription.containsAll(filterWords)) {
-                        actors.add(actor.getName());
-                    }
-                }
-
-                actors.sort(String::compareTo);
-
-                if (this.sortType.equals(DESCENDING)) {
-                    Collections.reverse(actors);
-                }
-
-                return QUERY_REZZ + actors;
-            }
-
-            if (RATINGS.equals(this.criteria)) {
-                if (MOVIES.equals(this.objectType)) {
-                    ArrayList<Video> ratedMovies = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (!video.isShow() && video.getAvgRating() > 0
-                                && Utils.isFiltered(video, this)) {
-                            ratedMovies.add(video);
-                        }
-                    }
-
-                    return getRatedVideos(ratedMovies);
-                }
-
-                if (SHOWS.equals(this.objectType)) {
-                    ArrayList<Video> ratedShows = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (video.isShow() && video.getAvgRating() > 0
-                                && Utils.isFiltered(video, this)) {
-                            ratedShows.add(video);
-                        }
-                    }
-
-                    return getRatedVideos(ratedShows);
-                }
-            }
-
-            if (FAVORITE.equals(this.criteria)) {
-                if (MOVIES.equals(this.objectType)) {
-                    ArrayList<Video> favMovies = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (!video.isShow() && video.getNrOfFav() > 0
-                                && Utils.isFiltered(video, this)) {
-                            favMovies.add(video);
-                        }
-                    }
-
-                    return getFavVideos(favMovies);
-                }
-
-                if (SHOWS.equals(this.objectType)) {
-                    ArrayList<Video> favShows = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (video.isShow() && video.getNrOfFav() > 0
-                                && Utils.isFiltered(video, this)) {
-                            favShows.add(video);
-                        }
-                    }
-
-                    return getFavVideos(favShows);
-                }
-            }
-
-            if (LONGEST.equals(this.criteria)) {
-                if (MOVIES.equals(this.objectType)) {
-                    ArrayList<Video> longestMovies = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (!video.isShow() && Utils.isFiltered(video, this)) {
-                            longestMovies.add(video);
-                        }
-                    }
-
-                    return getLongVideos(longestMovies);
-                }
-
-                if (SHOWS.equals(this.objectType)) {
-                    ArrayList<Video> longestShows = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (video.isShow() && Utils.isFiltered(video, this)) {
-                            longestShows.add(video);
-                        }
-                    }
-
-                    return getLongVideos(longestShows);
-                }
-            }
-
-            if (MOST_VIEWED.equals(this.criteria)) {
-                if (MOVIES.equals(this.objectType)) {
-                    ArrayList<Video> mostViewedMovies = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (!video.isShow() && video.getViews() > 0
-                                && Utils.isFiltered(video, this)) {
-                            mostViewedMovies.add(video);
-                        }
-                    }
-
-                    return getMostViewedVideos(mostViewedMovies);
-                }
-
-                if (SHOWS.equals(this.objectType)) {
-                    ArrayList<Video> mostViewedShows = new ArrayList<>();
-
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (video.isShow() && video.getViews() > 0
-                                && Utils.isFiltered(video, this)) {
-                            mostViewedShows.add(video);
-                        }
-                    }
-
-                    return getMostViewedVideos(mostViewedShows);
-                }
-            }
-
-            if (USERS.equals(this.objectType)) {
-                ArrayList<User> users = new ArrayList<>();
-
-                for (User user : userDatabase.getUserDatabase().values()) {
-                    if (user.getNrOfRatings() > 0) {
-                        users.add(user);
-                    }
-                }
-
-                users.sort((user1, user2) -> {
-                    int compare = user1.getNrOfRatings() - user2.getNrOfRatings();
-
-                    if (compare != 0) {
-                        return compare;
-                    } else {
-                        return user1.getUsername().compareTo(user2.getUsername());
-                    }
-                });
-
-                if (this.sortType.equals(DESCENDING)) {
-                    Collections.reverse(users);
-                }
-
-                while (this.number < users.size()) {
-                    users.remove(this.number);
-                }
-
-                return QUERY_REZZ + Utils.usernamesToString(users);
-            }
-        } else if (RECOMMENDATION.equals(this.actionType)) {
-            User user = userDatabase.getUserDatabase().get(this.username);
-
-            return recommendation(user, videoDatabase, genreDatabase);
-        }
-
-        return "";
+        return switch (this.actionType) {
+            case (COMMAND) -> command(user, video, genreDatabase);
+            case (QUERY) -> query(actorDatabase, videoDatabase, userDatabase);
+            case (RECOMMENDATION) -> recommendation(user, videoDatabase, genreDatabase);
+            default -> null;
+        };
     }
 
-    private String getMostViewedVideos(ArrayList<Video> mostViewedVideos) {
+    private String getMostViewedVideos(final ArrayList<Video> mostViewedVideos) {
         mostViewedVideos.sort((video1, video2) -> {
             int compare = video1.getViews() - video2.getViews();
 
@@ -320,7 +88,7 @@ public class Action {
         return QUERY_REZZ + Utils.videosTitle(mostViewedVideos);
     }
 
-    private String getLongVideos(ArrayList<Video> longestVideos) {
+    private String getLongVideos(final ArrayList<Video> longestVideos) {
         longestVideos.sort((video1, video2) -> {
             int compare = video1.getDuration() - video2.getDuration();
 
@@ -342,7 +110,7 @@ public class Action {
         return QUERY_REZZ + Utils.videosTitle(longestVideos);
     }
 
-    private String getFavVideos(ArrayList<Video> favVideos) {
+    private String getFavVideos(final ArrayList<Video> favVideos) {
         favVideos.sort((video1, video2) -> {
             int compare = video1.getNrOfFav() - video2.getNrOfFav();
 
@@ -364,7 +132,7 @@ public class Action {
         return QUERY_REZZ + Utils.videosTitle(favVideos);
     }
 
-    private String getRatedVideos(ArrayList<Video> ratedVideos) {
+    private String getRatedVideos(final ArrayList<Video> ratedVideos) {
         ratedVideos.sort((video1, video2) -> {
             int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
 
@@ -386,11 +154,11 @@ public class Action {
         return QUERY_REZZ + Utils.videosTitle(ratedVideos);
     }
 
-    public int getActionId() {
+    public final int getActionId() {
         return actionId;
     }
 
-    public List<List<String>> getFilters() {
+    public final List<List<String>> getFilters() {
         return filters;
     }
 
@@ -419,8 +187,9 @@ public class Action {
     private String viewCom(final User user, final Video video, final GenreDatabase genreDatabase) {
         video.setViews(video.getViews() + 1);
 
-        video.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
-                genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + 1));
+        video.getGenres().forEach(genreName ->
+                genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genreName),
+                genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genreName)) + 1));
 
         if (!user.getViewedList().containsKey(video)) {
             user.getViewedList().put(video, 1);
@@ -451,6 +220,246 @@ public class Action {
                 }
             }
         }
+    }
+
+    private String query(final ActorDatabase actorDatabase, final VideoDatabase videoDatabase,
+                         final UserDatabase userDatabase) {
+        return switch (this.criteria) {
+            case (AVERAGE) -> averageQuery(actorDatabase, videoDatabase);
+            case (AWARDS) -> awardsQuery(actorDatabase);
+            case (FILTER_DESCRIPTIONS) -> descriptionQuery(actorDatabase);
+            case (RATINGS) -> ratingsQuery(videoDatabase);
+            case (FAVORITE) -> favQuery(videoDatabase);
+            case (LONGEST) -> longestQuery(videoDatabase);
+            case (MOST_VIEWED) -> mostViewedQuery(videoDatabase);
+            case (NUM_RATINGS) -> userQuery(userDatabase);
+            default -> null;
+        };
+    }
+
+    private String averageQuery(final ActorDatabase actorDatabase,
+                                final VideoDatabase videoDatabase) {
+        actorDatabase.getActorDatabase().values().forEach(actor ->
+                Utils.computeActorGrade(actor, videoDatabase));
+
+        ArrayList<Actor> actors = new ArrayList<>();
+
+        actorDatabase.getActorDatabase().values().forEach(actor -> {
+            if (actor.getAverageRating() > 0) {
+                actors.add(actor);
+            }
+        });
+
+        actors.sort((actor1, actor2) -> {
+            int compute = actor1.getAverageRating().compareTo(actor2.getAverageRating());
+
+            if (compute != 0) {
+                return compute;
+            } else {
+                return actor1.getName().compareTo(actor2.getName());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(actors);
+        }
+
+        while (this.number < actors.size()) {
+            actors.remove(this.number);
+        }
+
+        ArrayList<String> actorsNames = new ArrayList<>();
+
+        actors.forEach(actor -> actorsNames.add(actor.getName()));
+
+        return QUERY_REZZ + actorsNames;
+    }
+
+    private String awardsQuery(final ActorDatabase actorDatabase) {
+        ArrayList<String> actorsNames = new ArrayList<>();
+        ArrayList<Actor> actors = new ArrayList<>();
+        ArrayList<ActorsAwards> awards = new ArrayList<>();
+
+        this.filters.get(AWARD_LIST).forEach(string -> awards.add(Utils.stringToAwards(string)));
+
+        for (Actor actor : actorDatabase.getActorDatabase().values()) {
+            if (actor.getAwards().keySet().containsAll(awards)) {
+                actors.add(actor);
+            }
+        }
+
+        actors.sort((actor1, actor2) -> {
+            int compare = actor1.getTotalAwards() - actor2.getTotalAwards();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return actor1.getName().compareTo(actor2.getName());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(actors);
+        }
+
+        actors.forEach(actor -> actorsNames.add(actor.getName()));
+
+        return QUERY_REZZ + actorsNames;
+    }
+
+    private String descriptionQuery(final ActorDatabase actorDatabase) {
+        ArrayList<String> actors = new ArrayList<>();
+        ArrayList<String> filterWords = new ArrayList<>(this.filters.get(2));
+
+        for (Actor actor : actorDatabase.getActorDatabase().values()) {
+
+            ArrayList<String> careerDescription;
+            careerDescription = Utils.stringToArray(actor.getCareerDescription());
+
+            if (careerDescription.containsAll(filterWords)) {
+                actors.add(actor.getName());
+            }
+        }
+
+        actors.sort(String::compareTo);
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(actors);
+        }
+
+        return QUERY_REZZ + actors;
+    }
+
+    private String ratingsQuery(final VideoDatabase videoDatabase) {
+        if (MOVIES.equals(this.objectType)) {
+            ArrayList<Video> ratedMovies = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (!video.isShow() && video.getAvgRating() > 0
+                        && Utils.isFiltered(video, this)) {
+                    ratedMovies.add(video);
+                }
+            }
+
+            return getRatedVideos(ratedMovies);
+        } else {
+            ArrayList<Video> ratedShows = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (video.isShow() && video.getAvgRating() > 0
+                        && Utils.isFiltered(video, this)) {
+                    ratedShows.add(video);
+                }
+            }
+
+            return getRatedVideos(ratedShows);
+        }
+    }
+
+    private String favQuery(final VideoDatabase videoDatabase) {
+        if (MOVIES.equals(this.objectType)) {
+            ArrayList<Video> favMovies = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (!video.isShow() && video.getNrOfFav() > 0
+                        && Utils.isFiltered(video, this)) {
+                    favMovies.add(video);
+                }
+            }
+
+            return getFavVideos(favMovies);
+        } else {
+            ArrayList<Video> favShows = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (video.isShow() && video.getNrOfFav() > 0
+                        && Utils.isFiltered(video, this)) {
+                    favShows.add(video);
+                }
+            }
+
+            return getFavVideos(favShows);
+        }
+    }
+
+    private String longestQuery(final VideoDatabase videoDatabase) {
+        if (MOVIES.equals(this.objectType)) {
+            ArrayList<Video> longestMovies = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (!video.isShow() && Utils.isFiltered(video, this)) {
+                    longestMovies.add(video);
+                }
+            }
+
+            return getLongVideos(longestMovies);
+        } else {
+            ArrayList<Video> longestShows = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (video.isShow() && Utils.isFiltered(video, this)) {
+                    longestShows.add(video);
+                }
+            }
+
+            return getLongVideos(longestShows);
+        }
+    }
+
+    private String mostViewedQuery(final VideoDatabase videoDatabase) {
+        if (MOVIES.equals(this.objectType)) {
+            ArrayList<Video> mostViewedMovies = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (!video.isShow() && video.getViews() > 0
+                        && Utils.isFiltered(video, this)) {
+                    mostViewedMovies.add(video);
+                }
+            }
+
+            return getMostViewedVideos(mostViewedMovies);
+        } else {
+            ArrayList<Video> mostViewedShows = new ArrayList<>();
+
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (video.isShow() && video.getViews() > 0
+                        && Utils.isFiltered(video, this)) {
+                    mostViewedShows.add(video);
+                }
+            }
+
+            return getMostViewedVideos(mostViewedShows);
+        }
+    }
+
+    private String userQuery(final UserDatabase userDatabase) {
+        ArrayList<User> users = new ArrayList<>();
+
+        for (User user : userDatabase.getUserDatabase().values()) {
+            if (user.getNrOfRatings() > 0) {
+                users.add(user);
+            }
+        }
+
+        users.sort((user1, user2) -> {
+            int compare = user1.getNrOfRatings() - user2.getNrOfRatings();
+
+            if (compare != 0) {
+                return compare;
+            } else {
+                return user1.getUsername().compareTo(user2.getUsername());
+            }
+        });
+
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(users);
+        }
+
+        while (this.number < users.size()) {
+            users.remove(this.number);
+        }
+
+        return QUERY_REZZ + Utils.usernamesToString(users);
     }
 
     private String recommendation(final User user, final VideoDatabase videoDatabase,
@@ -512,23 +521,25 @@ public class Action {
 
         ArrayList<Genre> allGenres = new ArrayList<>(genreDatabase.getGenreDatabase().keySet());
 
-        allGenres.sort(Comparator.comparingInt(genre -> genreDatabase.getGenreDatabase().get(genre)));
+        allGenres.sort(Comparator.comparingInt(key -> genreDatabase.getGenreDatabase().get(key)));
 
         ArrayList<String> stringGenres = new ArrayList<>();
 
-        allGenres.forEach(genre -> stringGenres.add(Utils.genreToString(genre)));
+        for (Genre genre : allGenres) {
+            stringGenres.add(Utils.genreToString(genre));
+        }
         Collections.reverse(stringGenres);
 
-        for (String genre : stringGenres) {
+        for (String genreName : stringGenres) {
             for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.getGenres().contains(genre) && !user.getViewedList().containsKey(video)) {
+                if (video.getGenres().contains(genreName)
+                        && !user.getViewedList().containsKey(video)) {
                     return POPULAR_REC + REZZ + video.getTitle();
                 }
             }
         }
 
         return POPULAR_REC + CANT_APPLY;
-
     }
 
     private String favRec(final User user, final VideoDatabase videoDatabase) {

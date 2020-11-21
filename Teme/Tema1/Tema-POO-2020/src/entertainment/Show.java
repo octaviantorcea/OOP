@@ -31,9 +31,8 @@ public final class Show extends Video {
         this.avgRating = sum / this.nrSeasons;
     }
 
-    @Override
-    public void readVideo(final ShowInput showInput) {
-        super.readVideo(showInput);
+    public Show(final ShowInput showInput) {
+        super(showInput);
         this.nrSeasons = ((SerialInputData) showInput).getNumberSeason();
         this.seasons = ((SerialInputData) showInput).getSeasons();
 

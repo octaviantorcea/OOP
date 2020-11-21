@@ -15,14 +15,12 @@ public final class VideoDatabase {
     public VideoDatabase(final List<MovieInputData> movieData,
                          final List<SerialInputData> serialData) {
         for (MovieInputData movieEntry : movieData) {
-            Movie newMovie = new Movie();
-            newMovie.readVideo(movieEntry);
+            Movie newMovie = new Movie(movieEntry);
             videoDatabase.put(newMovie.getTitle(), newMovie);
         }
 
         for (SerialInputData serialEntry : serialData) {
-            Show newShow = new Show();
-            newShow.readVideo(serialEntry);
+            Show newShow = new Show(serialEntry);
             videoDatabase.put(newShow.getTitle(), newShow);
         }
     }

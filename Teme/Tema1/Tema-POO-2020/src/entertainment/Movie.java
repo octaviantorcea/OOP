@@ -23,9 +23,8 @@ public final class Movie extends Video {
         }
     }
 
-    @Override
-    public void readVideo(final ShowInput showInput) {
-        super.readVideo(showInput);
+    public Movie(final ShowInput showInput) {
+        super(showInput);
         this.duration = ((MovieInputData) showInput).getDuration();
     }
 

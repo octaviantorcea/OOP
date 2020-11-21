@@ -18,7 +18,7 @@ public abstract class Video {
 
     public abstract boolean isShow();
 
-    public void readVideo(final ShowInput showInput) {
+    public Video(final ShowInput showInput) {
         this.title = showInput.getTitle();
         this.year = showInput.getYear();
         this.actors.addAll(showInput.getCast());

@@ -24,7 +24,5 @@ Starting audit...
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:563:5: Class 'Action' looks like designed for extension (can be subclassed), but the method 'getFilters' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Action' final or making the method 'getFilters' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/entertainment/Video.java:17:5: Missing a Javadoc comment. [MissingJavadocMethod]
 [ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/entertainment/Video.java:19:5: Missing a Javadoc comment. [MissingJavadocMethod]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/entertainment/Video.java:21:5: Class 'Video' looks like designed for extension (can be subclassed), but the method 'readVideo' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Video' final or making the method 'readVideo' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/entertainment/Video.java:21:5: Missing a Javadoc comment. [MissingJavadocMethod]
 Audit done.
-Checkstyle ends with 27 errors.
+Checkstyle ends with 25 errors.

@@ -90,6 +90,15 @@ public final class Action {
         this.filters = actionData.getFilters();
     }
 
+    /**
+     * Calls the necessary method to execute the action depending on the
+     * action's type.
+     * @param actorDatabase all actors
+     * @param userDatabase all users
+     * @param videoDatabase all videos
+     * @param genreDatabase all genres
+     * @return the message as a string that will be put in the JSONArray
+     */
     public String executeAction(final ActorDatabase actorDatabase,
                                 final UserDatabase userDatabase,
                                 final VideoDatabase videoDatabase,
@@ -106,14 +115,13 @@ public final class Action {
         };
     }
 
-    public int getActionId() {
-        return actionId;
-    }
-
-    public List<List<String>> getFilters() {
-        return filters;
-    }
-
+    /**
+     * Executes one of the 3 commands.
+     * @param user the user that "does" the command
+     * @param video the video that the user does the command on
+     * @param genreDatabase all genres
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String command(final User user, final Video video, final GenreDatabase genreDatabase) {
         return switch (this.type) {
             case (FAVORITE) -> favCom(user, video);
@@ -123,11 +131,18 @@ public final class Action {
         };
     }
 
+    /**
+     * Tries to add the video in the user's favorite list if that video was
+     * seen by the user and is not already in the favorite list.
+     * @see user.User#addVideoInFavList
+     * @param user the user that favors a video
+     * @param video the video that has been favored
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String favCom(final User user, final Video video) {
         if (!user.getFavVideos().contains(video)
                 && user.getViewedList().containsKey(video)) {
-            user.getFavVideos().add(video);
-            video.setNrOfFav(video.getNrOfFav() + 1);
+            user.addVideoInFavList(video);
             return SUCCESS + video.getTitle() + ADDED_FAV;
         } else if (user.getFavVideos().contains(video)) {
             return ERROR + video.getTitle() + ALREADY_FAV;
@@ -136,16 +151,34 @@ public final class Action {
         }
     }
 
+    /**
+     * Calls the method from the user class to watch a video.
+     * @see user.User#watchVideo
+     * @param user the user that views a video
+     * @param video the video that has been viewed
+     * @param genreDatabase all the genres
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String viewCom(final User user, final Video video, final GenreDatabase genreDatabase) {
         user.watchVideo(video, genreDatabase);
         return SUCCESS + video.getTitle() + WAS_VIEWED + user.getViewedList().get(video);
     }
 
+    /**
+     * Uses the methods from the user class to rate a video.<br>
+     * If the video is not seen by the user it will return the
+     * specific error message.
+     * @see user.User#rateMovie
+     * @see user.User#rateShow
+     * @param user the user that rates a video
+     * @param video the video that has been rated
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String rateCom(final User user, final Video video) {
         if (!user.getViewedList().containsKey(video)) {
             return ERROR + video.getTitle() + NOT_SEEN;
         } else {
-            if (this.seasonNumber == 0) {
+            if (!video.isShow()) {
                 if (user.getRatedMovies().contains(this.title)) {
                     return ERROR + video.getTitle() + ALREADY_RATED;
                 } else {
@@ -163,6 +196,13 @@ public final class Action {
         }
     }
 
+    /**
+     * Applies the query depending on it's criteria.
+     * @param actorDatabase actor database
+     * @param videoDatabase video database
+     * @param userDatabase user database
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String query(final ActorDatabase actorDatabase, final VideoDatabase videoDatabase,
                          final UserDatabase userDatabase) {
         return switch (this.criteria) {
@@ -178,40 +218,16 @@ public final class Action {
         };
     }
 
+    /**
+     * @see database.ActorDatabase#getAvgQuery
+     * @param actorDatabase actor database
+     * @param videoDatabase video database
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String averageQuery(final ActorDatabase actorDatabase,
                                 final VideoDatabase videoDatabase) {
-        actorDatabase.getActorDatabase().values().forEach(actor ->
-                actor.computeActorGrade(videoDatabase));
-
-        ArrayList<Actor> actors = new ArrayList<>();
-
-        actorDatabase.getActorDatabase().values().forEach(actor -> {
-            if (actor.getAverageRating() > 0) {
-                actors.add(actor);
-            }
-        });
-
-        actors.sort((actor1, actor2) -> {
-            int compute = actor1.getAverageRating().compareTo(actor2.getAverageRating());
-
-            if (compute != 0) {
-                return compute;
-            } else {
-                return actor1.getName().compareTo(actor2.getName());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(actors);
-        }
-
-        while (this.number < actors.size()) {
-            actors.remove(this.number);
-        }
-
-        ArrayList<String> actorsNames = new ArrayList<>();
-
-        actors.forEach(actor -> actorsNames.add(actor.getName()));
+        ArrayList<String> actorsNames = actorDatabase.getAvgQuery(videoDatabase);
+        reverseAndTrimIfNecessary(actorsNames);
 
         return QUERY_REZZ + actorsNames;
     }
@@ -619,5 +635,23 @@ public final class Action {
         }
 
         return QUERY_REZZ + Utils.videosTitle(ratedVideos);
+    }
+
+    private void reverseAndTrimIfNecessary(final ArrayList<String> list) {
+        if (this.sortType.equals(DESCENDING)) {
+            Collections.reverse(list);
+        }
+
+        while (this.number < list.size()) {
+            list.remove(this.number);
+        }
+    }
+
+    public int getActionId() {
+        return actionId;
+    }
+
+    public List<List<String>> getFilters() {
+        return filters;
     }
 }

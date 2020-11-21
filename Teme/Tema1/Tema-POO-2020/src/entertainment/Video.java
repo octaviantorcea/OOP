@@ -42,6 +42,21 @@ public abstract class Video {
     }
 
     /**
+     * Increments views.
+     */
+    public final void incViews() {
+        views++;
+    }
+
+    /**
+     * Increments number of times this video was added to an user's favorite
+     * list.
+     */
+    public final void incNrOfFav() {
+        nrOfFav++;
+    }
+
+    /**
      * Verify if a video respects all the filters (if any) of an action.
      * @param action contains the filters
      * @return true if video respects the filters, false otherwise

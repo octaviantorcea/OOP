@@ -1,5 +1,2 @@
 Starting audit...
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/user/User.java:124:5: Missing a Javadoc comment. [MissingJavadocMethod]
-[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/action/Action.java:93:5: Missing a Javadoc comment. [MissingJavadocMethod]
 Audit done.
-Checkstyle ends with 2 errors.

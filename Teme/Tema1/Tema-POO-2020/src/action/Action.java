@@ -17,8 +17,48 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static common.Constants.*;
+import static common.Constants.ADDED_FAV;
+import static common.Constants.ALREADY_FAV;
+import static common.Constants.ALREADY_RATED;
+import static common.Constants.AVERAGE;
+import static common.Constants.AWARDS;
+import static common.Constants.AWARD_LIST;
+import static common.Constants.BEST_UNSEEN;
+import static common.Constants.BEST_UNSEEN_REC;
+import static common.Constants.BY;
+import static common.Constants.CANT_APPLY;
+import static common.Constants.COMMAND;
+import static common.Constants.DESCENDING;
+import static common.Constants.ERROR;
+import static common.Constants.FAVORITE;
+import static common.Constants.FAV_REC;
+import static common.Constants.FILTER_DESCRIPTIONS;
+import static common.Constants.LONGEST;
+import static common.Constants.MOST_VIEWED;
+import static common.Constants.MOVIES;
+import static common.Constants.NOT_SEEN;
+import static common.Constants.NUM_RATINGS;
+import static common.Constants.POPULAR;
+import static common.Constants.POPULAR_REC;
+import static common.Constants.QUERY;
+import static common.Constants.QUERY_REZZ;
+import static common.Constants.RATING;
+import static common.Constants.RATINGS;
+import static common.Constants.RECOMMENDATION;
+import static common.Constants.REZZ;
+import static common.Constants.SEARCH;
+import static common.Constants.SEARCH_REC;
+import static common.Constants.STANDARD;
+import static common.Constants.STANDARD_REC;
+import static common.Constants.SUCCESS;
+import static common.Constants.VIEW;
+import static common.Constants.WAS_RATED;
+import static common.Constants.WAS_VIEWED;
 
+/**
+ * Contains info about an action.<br>
+ * Has a method that executes every type of action.
+ */
 public final class Action {
     private final int actionId;
     private final String actionType;
@@ -97,18 +137,7 @@ public final class Action {
     }
 
     private String viewCom(final User user, final Video video, final GenreDatabase genreDatabase) {
-        video.setViews(video.getViews() + 1);
-
-        video.getGenres().forEach(genreName ->
-                genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genreName),
-                genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genreName)) + 1));
-
-        if (!user.getViewedList().containsKey(video)) {
-            user.getViewedList().put(video, 1);
-        } else {
-            user.getViewedList().put(video, user.getViewedList().get(video) + 1);
-        }
-
+        user.watchVideo(video, genreDatabase);
         return SUCCESS + video.getTitle() + WAS_VIEWED + user.getViewedList().get(video);
     }
 
@@ -437,8 +466,8 @@ public final class Action {
 
         ArrayList<String> stringGenres = new ArrayList<>();
 
-        for (Genre genre : allGenres) {
-            stringGenres.add(Utils.genreToString(genre));
+        for (Genre genres : allGenres) {
+            stringGenres.add(Utils.genreToString(genres));
         }
         Collections.reverse(stringGenres);
 

@@ -121,6 +121,26 @@ public final class User {
         show.calculateAverageRating();
     }
 
+    /**
+     * Increments the views of the video and the genres of that video.<br>
+     * Puts the video in the viewed list of the user if it wasn't watched.
+     * @param video the video that is viewed
+     * @param genreDatabase the database of genres
+     */
+    public void watchVideo(final Video video, final GenreDatabase genreDatabase) {
+        video.setViews(video.getViews() + 1);
+
+        video.getGenres().forEach(genreName ->
+                genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genreName),
+                        genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genreName)) + 1));
+
+        if (!this.viewedList.containsKey(video)) {
+            this.viewedList.put(video, 1);
+        } else {
+            this.viewedList.put(video, this.viewedList.get(video) + 1);
+        }
+    }
+
     public String getUsername() {
         return username;
     }

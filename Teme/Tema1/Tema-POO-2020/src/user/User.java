@@ -63,7 +63,8 @@ public final class User {
             viewedVideo.setViews(viewedVideo.getViews() + views);
             viewedList.put(viewedVideo, views);
 
-            viewedVideo.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
+            viewedVideo.getGenres().forEach(genre ->
+                    genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
                     genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + views));
         }));
     }
@@ -100,7 +101,8 @@ public final class User {
         show.calculateAverageRating();
     }
 
-    public User(final UserInputData userData, final VideoDatabase videoDatabase, final GenreDatabase genreDatabase) {
+    public User(final UserInputData userData, final VideoDatabase videoDatabase,
+                final GenreDatabase genreDatabase) {
         this.username = userData.getUsername();
         this.subscription = readSubscription(userData);
         readFavVideos(userData, videoDatabase);

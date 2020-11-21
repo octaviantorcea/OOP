@@ -43,7 +43,7 @@ public final class Actor {
         return awards;
     }
 
-    public void setAverageRating(Double averageRating) {
+    public void setAverageRating(final Double averageRating) {
         this.averageRating = averageRating;
     }
 

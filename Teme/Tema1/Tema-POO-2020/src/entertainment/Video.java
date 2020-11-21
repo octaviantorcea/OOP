@@ -25,53 +25,39 @@ public abstract class Video {
         this.genres.addAll(showInput.getGenres());
     }
 
-    public String getTitle() {
+    public final String getTitle() {
         return title;
     }
 
-    public int getNrOfFav() {
+    public final int getNrOfFav() {
         return nrOfFav;
     }
 
-    public void setNrOfFav(final int nrOfFav) {
+    public final void setNrOfFav(final int nrOfFav) {
         this.nrOfFav = nrOfFav;
     }
 
-    public int getViews() {
+    public final int getViews() {
         return views;
     }
 
-    public void setViews(final int views) {
+    public final void setViews(final int views) {
         this.views = views;
     }
 
-    public Double getAvgRating() {
+    public final Double getAvgRating() {
         return avgRating;
     }
 
-    public HashSet<String> getGenres() {
+    public final HashSet<String> getGenres() {
         return genres;
     }
 
-    public int getYear() {
+    public final int getYear() {
         return year;
     }
 
-    public int getDuration() {
+    public final int getDuration() {
         return duration;
-    }
-
-    // for debugging
-    @Override
-    public String toString() {
-        return "Video{"
-                + "title='" + title + '\''
-                + ", year=" + year
-                + ", actors=" + actors
-                + ", genres=" + genres
-                + ", views=" + views
-                + ", nrOfFav=" + nrOfFav
-                + ", avgRating=" + avgRating
-                + '}';
     }
 }

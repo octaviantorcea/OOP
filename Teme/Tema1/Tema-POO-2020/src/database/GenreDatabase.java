@@ -5,7 +5,7 @@ import entertainment.Genre;
 import java.util.HashMap;
 
 public final class GenreDatabase {
-    HashMap<Genre, Integer> genreDatabase = new HashMap<>();
+    private final HashMap<Genre, Integer> genreDatabase = new HashMap<>();
 
     public GenreDatabase() {
         for (Genre genre : Genre.values()) {

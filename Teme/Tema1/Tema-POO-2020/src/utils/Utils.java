@@ -11,7 +11,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import user.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The class contains static methods that helps with parsing.
@@ -189,16 +194,23 @@ public final class Utils {
     }
 
     /**
-     * Transforms a string to a string array that contains only the words from the string (all lowercase).
+     * Transforms a string to a string array that contains only the words from the string (all
+     * lowercase).
      * @param string the string that will be transformed.
      * @return the array of strings
      */
-    public static ArrayList<String> stringToArray(String string) {
-        string = string.replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\.", "").toLowerCase();
-        return new ArrayList<>(Arrays.asList(string.split(" ")));
+    public static ArrayList<String> stringToArray(final String string) {
+        String auxStr = string.replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\.", "").toLowerCase();
+        return new ArrayList<>(Arrays.asList(auxStr.split(" ")));
     }
 
-    public static void computeActorGrade(Actor actor, VideoDatabase videoDatabase) {
+    /**
+     * Computes the average grade for an Actor.<br>
+     * Only videos that are graded are considered.
+     * @param actor actor whose grade will be calculated
+     * @param videoDatabase the video database
+     */
+    public static void computeActorGrade(final Actor actor, final VideoDatabase videoDatabase) {
         double sumGrade = 0;
         int ratedVideos = 0;
 

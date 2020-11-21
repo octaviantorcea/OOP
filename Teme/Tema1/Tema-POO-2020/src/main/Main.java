@@ -4,7 +4,11 @@ import action.Action;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
-import database.*;
+import database.ActionDatabase;
+import database.ActorDatabase;
+import database.GenreDatabase;
+import database.UserDatabase;
+import database.VideoDatabase;
 import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
@@ -74,12 +78,14 @@ public final class Main {
 
         GenreDatabase genreDatabase = new GenreDatabase();
         VideoDatabase videoDatabase = new VideoDatabase(input.getMovies(), input.getSerials());
-        UserDatabase userDatabase = new UserDatabase(input.getUsers(), videoDatabase, genreDatabase);
+        UserDatabase userDatabase;
+        userDatabase = new UserDatabase(input.getUsers(), videoDatabase, genreDatabase);
         ActorDatabase actorDatabase = new ActorDatabase(input.getActors());
         ActionDatabase actionDatabase = new ActionDatabase(input.getCommands());
 
         for (Action action : actionDatabase.getActionsDatabase()) {
-            String message = action.executeAction(actorDatabase, userDatabase, videoDatabase, genreDatabase);
+            String message = action.executeAction(actorDatabase, userDatabase,
+                                                    videoDatabase, genreDatabase);
             arrayResult.add(fileWriter.writeFile(action.getActionId(), "", message));
         }
 

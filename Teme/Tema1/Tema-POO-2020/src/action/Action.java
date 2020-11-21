@@ -56,51 +56,7 @@ public class Action {
             User user = userDatabase.getUserDatabase().get(this.username);
             Video video = videoDatabase.getVideoDatabase().get(this.title);
 
-            if (FAVORITE.equals(this.type)) {
-                if (!user.getFavVideos().contains(video)
-                        && user.getViewedList().containsKey(video)) {
-                    user.getFavVideos().add(video);
-                    video.setNrOfFav(video.getNrOfFav() + 1);
-                    return SUCCESS + video.getTitle() + ADDED_FAV;
-                } else if (user.getFavVideos().contains(video)) {
-                    return ERROR + video.getTitle() + ALREADY_FAV;
-                } else if (!user.getViewedList().containsKey(video)) {
-                    return ERROR + video.getTitle() + NOT_SEEN;
-                }
-            } else if (VIEW.equals(this.type)) {
-                video.setViews(video.getViews() + 1);
-
-                video.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
-                        genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + 1));
-
-                if (!user.getViewedList().containsKey(video)) {
-                    user.getViewedList().put(video, 1);
-                } else {
-                    user.getViewedList().put(video, user.getViewedList().get(video) + 1);
-                }
-
-                return SUCCESS + video.getTitle() + WAS_VIEWED + user.getViewedList().get(video);
-            } else if (RATING.equals(this.type)) {
-                if (!user.getViewedList().containsKey(video)) {
-                    return ERROR + video.getTitle() + NOT_SEEN;
-                } else {
-                    if (this.seasonNumber == 0) { // then it's a movie
-                        if (user.getRatedMovies().contains(this.title)) {
-                            return ERROR + video.getTitle() + ALREADY_RATED;
-                        } else {
-                            user.rateMovie(video, this.grade);
-                            return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
-                        }
-                    } else {
-                        if (user.getRatedShows().contains(this.title + this.seasonNumber)) {
-                            return ERROR + video.getTitle() + ALREADY_RATED;
-                        } else {
-                            user.rateShow(this.seasonNumber, video, this.grade);
-                            return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
-                        }
-                    }
-                }
-            }
+            return command(user, video, genreDatabase);
         } else if (QUERY.equals(this.actionType)) {
             if (AVERAGE.equals(this.criteria)) {
                 actorDatabase.getActorDatabase().values().forEach(actor ->
@@ -144,7 +100,7 @@ public class Action {
                 ArrayList<Actor> actors = new ArrayList<>();
                 ArrayList<ActorsAwards> awards = new ArrayList<>();
 
-                getFilters().get(3).forEach(string -> awards.add(Utils.stringToAwards(string)));
+                this.filters.get(3).forEach(string -> awards.add(Utils.stringToAwards(string)));
 
                 for (Actor actor : actorDatabase.getActorDatabase().values()) {
                     if (actor.getAwards().keySet().containsAll(awards)) {
@@ -173,7 +129,7 @@ public class Action {
 
             if (FILTER_DESCRIPTIONS.equals(this.criteria)) {
                 ArrayList<String> actors = new ArrayList<>();
-                ArrayList<String> filterWords = new ArrayList<>(this.getFilters().get(2));
+                ArrayList<String> filterWords = new ArrayList<>(this.filters.get(2));
 
                 for (Actor actor : actorDatabase.getActorDatabase().values()) {
 
@@ -287,7 +243,7 @@ public class Action {
                         }
                     }
 
-                    return getMostViewedVideo(mostViewedMovies);
+                    return getMostViewedVideos(mostViewedMovies);
                 }
 
                 if (SHOWS.equals(this.objectType)) {
@@ -300,7 +256,7 @@ public class Action {
                         }
                     }
 
-                    return getMostViewedVideo(mostViewedShows);
+                    return getMostViewedVideos(mostViewedShows);
                 }
             }
 
@@ -336,118 +292,13 @@ public class Action {
         } else if (RECOMMENDATION.equals(this.actionType)) {
             User user = userDatabase.getUserDatabase().get(this.username);
 
-            if (STANDARD.equals(this.type)) {
-                String standardRec = "";
-
-                for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
-                    if (!user.getViewedList().containsKey(videoEntry)) {
-                        standardRec = videoEntry.getTitle();
-                        break;
-                    }
-                }
-
-                if (standardRec.isBlank()) {
-                    return STANDARD_REC + CANT_APPLY;
-                } else {
-                    return STANDARD_REC + REZZ + standardRec;
-                }
-            } else if (BEST_UNSEEN.equals(this.type)) {
-                Video bestUnseenRec = null;
-
-                for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
-                    if (!user.getViewedList().containsKey(videoEntry)) {
-                        if (bestUnseenRec == null) {
-                            bestUnseenRec = videoEntry;
-                        } else {
-                            if (videoEntry.getAvgRating() > bestUnseenRec.getAvgRating()) {
-                                bestUnseenRec = videoEntry;
-                            }
-                        }
-                    }
-                }
-
-                if (bestUnseenRec == null) {
-                    return BEST_UNSEEN_REC + CANT_APPLY;
-                } else {
-                    return BEST_UNSEEN_REC + REZZ + bestUnseenRec.getTitle();
-                }
-            } else if (POPULAR.equals(this.type)) {
-                if (!user.getSubscription()) {
-                    return POPULAR_REC + CANT_APPLY;
-                }
-
-                ArrayList<Genre> allGenres = new ArrayList<>(genreDatabase.getGenreDatabase().keySet());
-
-                allGenres.sort(Comparator.comparingInt(genre -> genreDatabase.getGenreDatabase().get(genre)));
-
-                ArrayList<String> stringGenres = new ArrayList<>();
-
-                allGenres.forEach(genre -> stringGenres.add(Utils.genreToString(genre)));
-                Collections.reverse(stringGenres);
-
-                for (String genre : stringGenres) {
-                    for (Video video : videoDatabase.getVideoDatabase().values()) {
-                        if (video.getGenres().contains(genre) && !user.getViewedList().containsKey(video)) {
-                            return POPULAR_REC + REZZ + video.getTitle();
-                        }
-                    }
-                }
-
-                return POPULAR_REC + CANT_APPLY;
-
-            } else if (FAVORITE.equals(this.type)) {
-                if (!user.getSubscription()) {
-                    return FAV_REC + CANT_APPLY;
-                }
-
-                Video bestFav = null;
-
-                for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
-                    if (!user.getViewedList().containsKey(videoEntry)) {
-                        if (bestFav == null) {
-                            if (videoEntry.getNrOfFav() > 0) {
-                                bestFav = videoEntry;
-                            }
-                        } else {
-                            if (videoEntry.getNrOfFav() > bestFav.getNrOfFav()) {
-                                bestFav = videoEntry;
-                            }
-                        }
-                    }
-                }
-
-                if (bestFav == null) {
-                    return FAV_REC + CANT_APPLY;
-                } else {
-                    return FAV_REC + REZZ + bestFav.getTitle();
-                }
-            } else if (SEARCH.equals(this.type)) {
-                if (!user.getSubscription()) {
-                    return SEARCH_REC + CANT_APPLY;
-                }
-
-                ArrayList<String> searchRec = new ArrayList<>();
-
-                for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
-                    if (!user.getViewedList().containsKey(videoEntry)
-                            && videoEntry.getGenres().contains(this.genre)) {
-                        searchRec.add(videoEntry.getTitle());
-                    }
-                }
-
-                if (searchRec.isEmpty()) {
-                    return SEARCH_REC + CANT_APPLY;
-                } else {
-                    Collections.sort(searchRec);
-                    return SEARCH_REC + REZZ + searchRec;
-                }
-            }
+            return recommendation(user, videoDatabase, genreDatabase);
         }
 
         return "";
     }
 
-    private String getMostViewedVideo(ArrayList<Video> mostViewedVideos) {
+    private String getMostViewedVideos(ArrayList<Video> mostViewedVideos) {
         mostViewedVideos.sort((video1, video2) -> {
             int compare = video1.getViews() - video2.getViews();
 
@@ -539,28 +390,194 @@ public class Action {
         return actionId;
     }
 
-    // for debugging
-    @Override
-    public String toString() {
-        return "Action{"
-                + "actionId=" + actionId
-                + ", actionType='" + actionType + '\''
-                + ", type='" + type + '\''
-                + ", username='" + username + '\''
-                + ", objectType='" + objectType + '\''
-                + ", sortType='" + sortType + '\''
-                + ", criteria='" + criteria + '\''
-                + ", title='" + title + '\''
-                + ", genre='" + genre + '\''
-                + ", number=" + number
-                + ", grade=" + grade
-                + ", seasonNumber=" + seasonNumber
-                + ", filters=" + filters
-                + '}';
-    }
-
-    // debugging
     public List<List<String>> getFilters() {
         return filters;
+    }
+
+    private String command(final User user, final Video video, final GenreDatabase genreDatabase) {
+        return switch (this.type) {
+            case (FAVORITE) -> favCom(user, video);
+            case (VIEW) -> viewCom(user, video, genreDatabase);
+            case (RATING) -> rateCom(user, video);
+            default -> null;
+        };
+    }
+
+    private String favCom(final User user, final Video video) {
+        if (!user.getFavVideos().contains(video)
+                && user.getViewedList().containsKey(video)) {
+            user.getFavVideos().add(video);
+            video.setNrOfFav(video.getNrOfFav() + 1);
+            return SUCCESS + video.getTitle() + ADDED_FAV;
+        } else if (user.getFavVideos().contains(video)) {
+            return ERROR + video.getTitle() + ALREADY_FAV;
+        } else {
+            return ERROR + video.getTitle() + NOT_SEEN;
+        }
+    }
+
+    private String viewCom(final User user, final Video video, final GenreDatabase genreDatabase) {
+        video.setViews(video.getViews() + 1);
+
+        video.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
+                genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + 1));
+
+        if (!user.getViewedList().containsKey(video)) {
+            user.getViewedList().put(video, 1);
+        } else {
+            user.getViewedList().put(video, user.getViewedList().get(video) + 1);
+        }
+
+        return SUCCESS + video.getTitle() + WAS_VIEWED + user.getViewedList().get(video);
+    }
+
+    private String rateCom(final User user, final Video video) {
+        if (!user.getViewedList().containsKey(video)) {
+            return ERROR + video.getTitle() + NOT_SEEN;
+        } else {
+            if (this.seasonNumber == 0) { // then it's a movie
+                if (user.getRatedMovies().contains(this.title)) {
+                    return ERROR + video.getTitle() + ALREADY_RATED;
+                } else {
+                    user.rateMovie(video, this.grade);
+                    return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
+                }
+            } else {
+                if (user.getRatedShows().contains(this.title + this.seasonNumber)) {
+                    return ERROR + video.getTitle() + ALREADY_RATED;
+                } else {
+                    user.rateShow(this.seasonNumber, video, this.grade);
+                    return SUCCESS + video.getTitle() + WAS_RATED + this.grade + BY + this.username;
+                }
+            }
+        }
+    }
+
+    private String recommendation(final User user, final VideoDatabase videoDatabase,
+                                  final GenreDatabase genreDatabase) {
+        return switch (this.type) {
+            case (STANDARD) -> standardRec(user, videoDatabase);
+            case (BEST_UNSEEN) -> bestUnseenRec(user, videoDatabase);
+            case (POPULAR) -> popularRec(user, videoDatabase, genreDatabase);
+            case (FAVORITE) -> favRec(user, videoDatabase);
+            case (SEARCH) -> searchRec(user, videoDatabase);
+            default -> null;
+        };
+    }
+
+    private String standardRec(final User user, final VideoDatabase videoDatabase) {
+        String standardRec = "";
+
+        for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
+            if (!user.getViewedList().containsKey(videoEntry)) {
+                standardRec = videoEntry.getTitle();
+                break;
+            }
+        }
+
+        if (standardRec.isBlank()) {
+            return STANDARD_REC + CANT_APPLY;
+        } else {
+            return STANDARD_REC + REZZ + standardRec;
+        }
+    }
+
+    private String bestUnseenRec(final User user, final VideoDatabase videoDatabase) {
+        Video bestUnseenRec = null;
+
+        for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
+            if (!user.getViewedList().containsKey(videoEntry)) {
+                if (bestUnseenRec == null) {
+                    bestUnseenRec = videoEntry;
+                } else {
+                    if (videoEntry.getAvgRating() > bestUnseenRec.getAvgRating()) {
+                        bestUnseenRec = videoEntry;
+                    }
+                }
+            }
+        }
+
+        if (bestUnseenRec == null) {
+            return BEST_UNSEEN_REC + CANT_APPLY;
+        } else {
+            return BEST_UNSEEN_REC + REZZ + bestUnseenRec.getTitle();
+        }
+    }
+
+    private String popularRec(final User user, final VideoDatabase videoDatabase,
+                              final GenreDatabase genreDatabase) {
+        if (!user.getSubscription()) {
+            return POPULAR_REC + CANT_APPLY;
+        }
+
+        ArrayList<Genre> allGenres = new ArrayList<>(genreDatabase.getGenreDatabase().keySet());
+
+        allGenres.sort(Comparator.comparingInt(genre -> genreDatabase.getGenreDatabase().get(genre)));
+
+        ArrayList<String> stringGenres = new ArrayList<>();
+
+        allGenres.forEach(genre -> stringGenres.add(Utils.genreToString(genre)));
+        Collections.reverse(stringGenres);
+
+        for (String genre : stringGenres) {
+            for (Video video : videoDatabase.getVideoDatabase().values()) {
+                if (video.getGenres().contains(genre) && !user.getViewedList().containsKey(video)) {
+                    return POPULAR_REC + REZZ + video.getTitle();
+                }
+            }
+        }
+
+        return POPULAR_REC + CANT_APPLY;
+
+    }
+
+    private String favRec(final User user, final VideoDatabase videoDatabase) {
+        if (!user.getSubscription()) {
+            return FAV_REC + CANT_APPLY;
+        }
+
+        Video bestFav = null;
+
+        for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
+            if (!user.getViewedList().containsKey(videoEntry)) {
+                if (bestFav == null) {
+                    if (videoEntry.getNrOfFav() > 0) {
+                        bestFav = videoEntry;
+                    }
+                } else {
+                    if (videoEntry.getNrOfFav() > bestFav.getNrOfFav()) {
+                        bestFav = videoEntry;
+                    }
+                }
+            }
+        }
+
+        if (bestFav == null) {
+            return FAV_REC + CANT_APPLY;
+        } else {
+            return FAV_REC + REZZ + bestFav.getTitle();
+        }
+    }
+
+    private String searchRec(final User user, final VideoDatabase videoDatabase) {
+        if (!user.getSubscription()) {
+            return SEARCH_REC + CANT_APPLY;
+        }
+
+        ArrayList<String> searchRec = new ArrayList<>();
+
+        for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
+            if (!user.getViewedList().containsKey(videoEntry)
+                    && videoEntry.getGenres().contains(this.genre)) {
+                searchRec.add(videoEntry.getTitle());
+            }
+        }
+
+        if (searchRec.isEmpty()) {
+            return SEARCH_REC + CANT_APPLY;
+        } else {
+            Collections.sort(searchRec);
+            return SEARCH_REC + REZZ + searchRec;
+        }
     }
 }

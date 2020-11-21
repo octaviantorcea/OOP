@@ -1,8 +1,11 @@
 package entertainment;
 
+import action.Action;
 import fileio.ShowInput;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Provides the skeleton for the "Movie" and "Show classes.<br>
@@ -36,6 +39,28 @@ public abstract class Video {
         this.year = showInput.getYear();
         this.actors.addAll(showInput.getCast());
         this.genres.addAll(showInput.getGenres());
+    }
+
+    /**
+     * Verify if a video respects all the filters (if any) of an action.
+     * @param action contains the filters
+     * @return true if video respects the filters, false otherwise
+     */
+    public boolean isFiltered(final Action action) {
+        List<String> years = action.getFilters().get(0);
+        List<String> genresList = action.getFilters().get(1);
+
+        if (years.get(0) != null) {
+            if (!years.get(0).equals(((Integer) this.getYear()).toString())) {
+                return false;
+            }
+        }
+
+        if (genresList.get(0) != null) {
+            return !(Collections.disjoint(genresList, this.getGenres()));
+        }
+
+        return true;
     }
 
     public final String getTitle() {

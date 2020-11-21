@@ -248,7 +248,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (!video.isShow() && video.getAvgRating() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     ratedMovies.add(video);
                 }
             }
@@ -259,7 +259,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (video.isShow() && video.getAvgRating() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     ratedShows.add(video);
                 }
             }
@@ -274,7 +274,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (!video.isShow() && video.getNrOfFav() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     favMovies.add(video);
                 }
             }
@@ -285,7 +285,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (video.isShow() && video.getNrOfFav() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     favShows.add(video);
                 }
             }
@@ -299,7 +299,7 @@ public final class Action {
             ArrayList<Video> longestMovies = new ArrayList<>();
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (!video.isShow() && Utils.isFiltered(video, this)) {
+                if (!video.isShow() && video.isFiltered(this)) {
                     longestMovies.add(video);
                 }
             }
@@ -309,7 +309,7 @@ public final class Action {
             ArrayList<Video> longestShows = new ArrayList<>();
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.isShow() && Utils.isFiltered(video, this)) {
+                if (video.isShow() && video.isFiltered(this)) {
                     longestShows.add(video);
                 }
             }
@@ -324,7 +324,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (!video.isShow() && video.getViews() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     mostViewedMovies.add(video);
                 }
             }
@@ -335,7 +335,7 @@ public final class Action {
 
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (video.isShow() && video.getViews() > 0
-                        && Utils.isFiltered(video, this)) {
+                        && video.isFiltered(this)) {
                     mostViewedShows.add(video);
                 }
             }

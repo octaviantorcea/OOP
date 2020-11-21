@@ -1,10 +1,13 @@
 package user;
 
+import database.GenreDatabase;
 import database.VideoDatabase;
 import entertainment.Movie;
 import entertainment.Show;
 import entertainment.Video;
 import fileio.UserInputData;
+import utils.Utils;
+
 import static common.Constants.BASIC;
 import static common.Constants.PREMIUM;
 
@@ -33,7 +36,7 @@ public final class User {
 
     /**
      * Puts favorite videos from UserInputData in favVideo HashSet.<br>
-     * Also increments the number of times a video has been favored.
+     * Increments the number of times a video has been favored.
      * @param userData data that needs to be put nicely
      * @param videoDatabase class where is stored all the videos
      */
@@ -48,15 +51,20 @@ public final class User {
     /**
      * Reads the "history" attribute of UserInputData and puts every video from history in
      * viewedList.<br>
-     * Also updates the views of every video added.
+     * Updates the views of every video added.
+     * Updates the views of each genre of the videos added.
      * @param userData data that needs to be put nicely
      * @param videoDatabase class where is stored all the videos
      */
-    private void readViewedList(final UserInputData userData, final VideoDatabase videoDatabase) {
+    private void readViewedList(final UserInputData userData, final VideoDatabase videoDatabase,
+                                final GenreDatabase genreDatabase) {
         userData.getHistory().forEach(((title, views) -> {
             Video viewedVideo = videoDatabase.getVideoDatabase().get(title);
             viewedVideo.setViews(viewedVideo.getViews() + views);
             viewedList.put(viewedVideo, views);
+
+            viewedVideo.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
+                    genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + views));
         }));
     }
 
@@ -92,11 +100,11 @@ public final class User {
         show.calculateAverageRating();
     }
 
-    public User(final UserInputData userData, final VideoDatabase videoDatabase) {
+    public User(final UserInputData userData, final VideoDatabase videoDatabase, final GenreDatabase genreDatabase) {
         this.username = userData.getUsername();
         this.subscription = readSubscription(userData);
         readFavVideos(userData, videoDatabase);
-        readViewedList(userData, videoDatabase);
+        readViewedList(userData, videoDatabase, genreDatabase);
     }
 
     public String getUsername() {

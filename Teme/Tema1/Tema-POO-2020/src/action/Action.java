@@ -3,8 +3,10 @@ package action;
 import actor.Actor;
 import actor.ActorsAwards;
 import database.ActorDatabase;
+import database.GenreDatabase;
 import database.UserDatabase;
 import database.VideoDatabase;
+import entertainment.Genre;
 import entertainment.Video;
 import fileio.ActionInputData;
 import user.User;
@@ -12,6 +14,7 @@ import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static common.Constants.*;
@@ -48,7 +51,7 @@ public class Action {
     }
 
     public String executeAction(final ActorDatabase actorDatabase, final UserDatabase userDatabase,
-                                final VideoDatabase videoDatabase) {
+                                final VideoDatabase videoDatabase, final GenreDatabase genreDatabase) {
         if (COMMAND.equals(this.actionType)) {
             User user = userDatabase.getUserDatabase().get(this.username);
             Video video = videoDatabase.getVideoDatabase().get(this.title);
@@ -66,6 +69,9 @@ public class Action {
                 }
             } else if (VIEW.equals(this.type)) {
                 video.setViews(video.getViews() + 1);
+
+                video.getGenres().forEach(genre -> genreDatabase.getGenreDatabase().put(Utils.stringToGenre(genre),
+                        genreDatabase.getGenreDatabase().get(Utils.stringToGenre(genre)) + 1));
 
                 if (!user.getViewedList().containsKey(video)) {
                     user.getViewedList().put(video, 1);
@@ -370,7 +376,25 @@ public class Action {
                     return POPULAR_REC + CANT_APPLY;
                 }
 
-                //TODO
+                ArrayList<Genre> allGenres = new ArrayList<>(genreDatabase.getGenreDatabase().keySet());
+
+                allGenres.sort(Comparator.comparingInt(genre -> genreDatabase.getGenreDatabase().get(genre)));
+
+                ArrayList<String> stringGenres = new ArrayList<>();
+
+                allGenres.forEach(genre -> stringGenres.add(Utils.genreToString(genre)));
+                Collections.reverse(stringGenres);
+
+                for (String genre : stringGenres) {
+                    for (Video video : videoDatabase.getVideoDatabase().values()) {
+                        if (video.getGenres().contains(genre) && !user.getViewedList().containsKey(video)) {
+                            return POPULAR_REC + REZZ + video.getTitle();
+                        }
+                    }
+                }
+
+                return POPULAR_REC + CANT_APPLY;
+
             } else if (FAVORITE.equals(this.type)) {
                 if (!user.getSubscription()) {
                     return FAV_REC + CANT_APPLY;

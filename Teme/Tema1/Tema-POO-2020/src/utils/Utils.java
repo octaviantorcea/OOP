@@ -194,7 +194,7 @@ public final class Utils {
      * @return the array of strings
      */
     public static ArrayList<String> stringToArray(String string) {
-        string = string.replaceAll("[^a-zA-Z0-9] ", " ").replaceAll("\\.", "").toLowerCase();
+        string = string.replaceAll("[^a-zA-Z0-9]", " ").replaceAll("\\.", "").toLowerCase();
         return new ArrayList<>(Arrays.asList(string.split(" ")));
     }
 
@@ -216,5 +216,35 @@ public final class Utils {
         } else {
             actor.setAverageRating(sumGrade / ratedVideos);
         }
+    }
+
+    /**
+     * Transforms a Genre into a string
+     * @param genre of video
+     * @return a string
+     */
+    public static String genreToString(final Genre genre) {
+        return switch (genre) {
+            case ACTION -> "Action";
+            case ADVENTURE -> "Adventure";
+            case DRAMA -> "Drama";
+            case COMEDY -> "Comedy";
+            case CRIME -> "Crime";
+            case ROMANCE -> "Romance";
+            case WAR -> "War";
+            case HISTORY -> "History";
+            case THRILLER -> "Thriller";
+            case MYSTERY -> "Mystery";
+            case FAMILY -> "Family";
+            case HORROR -> "Horror";
+            case FANTASY -> "Fantasy";
+            case SCIENCE_FICTION -> "Science Fiction";
+            case ACTION_ADVENTURE -> "Action & Adventure";
+            case SCI_FI_FANTASY -> "Sci-Fi & Fantasy";
+            case ANIMATION -> "Animation";
+            case KIDS -> "Kids";
+            case WESTERN -> "Western";
+            case TV_MOVIE -> "TV Movie";
+        };
     }
 }

@@ -1,7 +1,5 @@
 package action;
 
-import actor.Actor;
-import actor.ActorsAwards;
 import database.ActorDatabase;
 import database.GenreDatabase;
 import database.UserDatabase;
@@ -22,7 +20,6 @@ import static common.Constants.ALREADY_FAV;
 import static common.Constants.ALREADY_RATED;
 import static common.Constants.AVERAGE;
 import static common.Constants.AWARDS;
-import static common.Constants.AWARD_LIST;
 import static common.Constants.BEST_UNSEEN;
 import static common.Constants.BEST_UNSEEN_REC;
 import static common.Constants.BY;
@@ -232,85 +229,51 @@ public final class Action {
         return QUERY_REZZ + actorsNames;
     }
 
+
+    /**
+     * @see database.ActorDatabase#getAwardsQuery
+     * @param actorDatabase actor database
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String awardsQuery(final ActorDatabase actorDatabase) {
-        ArrayList<String> actorsNames = new ArrayList<>();
-        ArrayList<Actor> actors = new ArrayList<>();
-        ArrayList<ActorsAwards> awards = new ArrayList<>();
-
-        this.filters.get(AWARD_LIST).forEach(string -> awards.add(Utils.stringToAwards(string)));
-
-        for (Actor actor : actorDatabase.getActorDatabase().values()) {
-            if (actor.getAwards().keySet().containsAll(awards)) {
-                actors.add(actor);
-            }
-        }
-
-        actors.sort((actor1, actor2) -> {
-            int compare = actor1.getTotalAwards() - actor2.getTotalAwards();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return actor1.getName().compareTo(actor2.getName());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(actors);
-        }
-
-        actors.forEach(actor -> actorsNames.add(actor.getName()));
+        ArrayList<String> actorsNames = actorDatabase.getAwardsQuery(this);
+        reverseAndTrimIfNecessary(actorsNames);
 
         return QUERY_REZZ + actorsNames;
     }
 
+    /**
+     * @see database.ActorDatabase#getDescriptionQuery
+     * @param actorDatabase actor database
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String descriptionQuery(final ActorDatabase actorDatabase) {
-        ArrayList<String> actors = new ArrayList<>();
-        ArrayList<String> filterWords = new ArrayList<>(this.filters.get(2));
-
-        for (Actor actor : actorDatabase.getActorDatabase().values()) {
-
-            ArrayList<String> careerDescription;
-            careerDescription = Utils.stringToArray(actor.getCareerDescription());
-
-            if (careerDescription.containsAll(filterWords)) {
-                actors.add(actor.getName());
-            }
-        }
-
-        actors.sort(String::compareTo);
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(actors);
-        }
+        ArrayList<String> actors = actorDatabase.getDescriptionQuery(this);
+        reverseAndTrimIfNecessary(actors);
 
         return QUERY_REZZ + actors;
     }
 
     private String ratingsQuery(final VideoDatabase videoDatabase) {
-        if (MOVIES.equals(this.objectType)) {
-            ArrayList<Video> ratedMovies = new ArrayList<>();
+        ArrayList<Video> ratedVideos = new ArrayList<>();
 
+        if (MOVIES.equals(this.objectType)) {
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (!video.isShow() && video.getAvgRating() > 0
                         && video.isFiltered(this)) {
-                    ratedMovies.add(video);
+                    ratedVideos.add(video);
                 }
             }
-
-            return getRatedVideos(ratedMovies);
         } else {
-            ArrayList<Video> ratedShows = new ArrayList<>();
-
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (video.isShow() && video.getAvgRating() > 0
                         && video.isFiltered(this)) {
-                    ratedShows.add(video);
+                    ratedVideos.add(video);
                 }
             }
-
-            return getRatedVideos(ratedShows);
         }
+
+        return getRatedVideos(ratedVideos);
     }
 
     private String favQuery(final VideoDatabase videoDatabase) {
@@ -642,8 +605,10 @@ public final class Action {
             Collections.reverse(list);
         }
 
-        while (this.number < list.size()) {
-            list.remove(this.number);
+        if (number != 0) {
+            while (this.number < list.size()) {
+                list.remove(this.number);
+            }
         }
     }
 

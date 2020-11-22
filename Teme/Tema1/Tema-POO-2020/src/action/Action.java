@@ -217,8 +217,8 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getAvgQuery
-     * @param actorDatabase actor database
-     * @param videoDatabase video database
+     * @param actorDatabase the database on which the query is made
+     * @param videoDatabase video database needed to compute average grade
      * @return the message as a string that will be put in the JSONArray
      */
     private String averageQuery(final ActorDatabase actorDatabase,
@@ -232,7 +232,7 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getAwardsQuery
-     * @param actorDatabase actor database
+     * @param actorDatabase the database on which the query is made
      * @return the message as a string that will be put in the JSONArray
      */
     private String awardsQuery(final ActorDatabase actorDatabase) {
@@ -244,7 +244,7 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getDescriptionQuery
-     * @param actorDatabase actor database
+     * @param actorDatabase the database on which the query is made
      * @return the message as a string that will be put in the JSONArray
      */
     private String descriptionQuery(final ActorDatabase actorDatabase) {
@@ -352,34 +352,16 @@ public final class Action {
         }
     }
 
+    /**
+     * @see UserDatabase#getPopularUsers
+     * @param userDatabase the database on which the query is made
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String userQuery(final UserDatabase userDatabase) {
-        ArrayList<User> users = new ArrayList<>();
+        ArrayList<String> users = userDatabase.getPopularUsers();
+        reverseAndTrimIfNecessary(users);
 
-        for (User user : userDatabase.getUserDatabase().values()) {
-            if (user.getNrOfRatings() > 0) {
-                users.add(user);
-            }
-        }
-
-        users.sort((user1, user2) -> {
-            int compare = user1.getNrOfRatings() - user2.getNrOfRatings();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return user1.getUsername().compareTo(user2.getUsername());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(users);
-        }
-
-        while (this.number < users.size()) {
-            users.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.usernamesToString(users);
+        return QUERY_REZZ + users;
     }
 
     private String recommendation(final User user, final VideoDatabase videoDatabase,

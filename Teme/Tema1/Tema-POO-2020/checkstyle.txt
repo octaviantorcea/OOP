@@ -1,2 +1,4 @@
 Starting audit...
+[ERROR] /home/octavian/Desktop/OOP/Teme/Tema1/Tema-POO-2020/./src/database/UserDatabase.java:5:8: Unused import - utils.Utils. [UnusedImports]
 Audit done.
+Checkstyle ends with 1 errors.

@@ -6,7 +6,6 @@ import entertainment.Genre;
 import entertainment.Video;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import user.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,23 +124,6 @@ public final class Utils {
         }
 
         return mapVideos;
-    }
-
-    /**
-     * Returns a string representation of only the usernames of users from a list.
-     * @param users the list of users whose usernames will be converted to string
-     * @return the string that contains only the usernames of users from a list
-     */
-    public static String usernamesToString(final ArrayList<User> users) {
-        StringBuilder toArray = new StringBuilder("[");
-
-        for (int i = 0; i < users.size() - 1; i++) {
-            toArray.append(users.get(i).getUsername()).append(", ");
-        }
-
-        toArray.append(users.get(users.size() - 1).getUsername()).append("]");
-
-        return toArray.toString();
     }
 
     /**

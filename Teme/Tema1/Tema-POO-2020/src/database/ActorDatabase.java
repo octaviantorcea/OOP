@@ -32,10 +32,10 @@ public final class ActorDatabase {
      * (in ascending order) by their average grade (and with grade > 0)
      */
     public ArrayList<String> getAvgQuery(final VideoDatabase videoDatabase) {
-        actorDatabase.values().forEach(actor -> actor.computeActorGrade(videoDatabase));
-
+        ArrayList<String> actorsNames = new ArrayList<>();
         ArrayList<Actor> actors = new ArrayList<>();
 
+        actorDatabase.values().forEach(actor -> actor.computeActorGrade(videoDatabase));
         actorDatabase.values().forEach(actor -> {
             if (actor.getAverageRating() > 0) {
                 actors.add(actor);
@@ -52,7 +52,6 @@ public final class ActorDatabase {
             }
         });
 
-        ArrayList<String> actorsNames = new ArrayList<>();
         actors.forEach(actor -> actorsNames.add(actor.getName()));
 
         return actorsNames;

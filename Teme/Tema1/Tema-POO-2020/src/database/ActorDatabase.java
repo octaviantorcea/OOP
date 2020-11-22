@@ -28,7 +28,7 @@ public final class ActorDatabase {
 
     /**
      * @param videoDatabase the video database
-     * @return an array of string containing the names of all the actors sorted
+     * @return an array of strings containing the names of all the actors sorted
      * (in ascending order) by their average grade (and with grade > 0)
      */
     public ArrayList<String> getAvgQuery(final VideoDatabase videoDatabase) {
@@ -42,6 +42,7 @@ public final class ActorDatabase {
             }
         });
 
+        // sorting them by their grade; if equal -> sort them alphabetically
         actors.sort((actor1, actor2) -> {
             int compute = actor1.getAverageRating().compareTo(actor2.getAverageRating());
 
@@ -77,6 +78,7 @@ public final class ActorDatabase {
             }
         }
 
+        // sort them by the number of their awards; if equal -> sort them alphabetically
         actors.sort((actor1, actor2) -> {
             int compare = actor1.getTotalAwards() - actor2.getTotalAwards();
 

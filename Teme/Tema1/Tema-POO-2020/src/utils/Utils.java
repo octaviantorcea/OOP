@@ -3,7 +3,6 @@ package utils;
 import actor.ActorsAwards;
 import common.Constants;
 import entertainment.Genre;
-import entertainment.Video;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -124,27 +123,6 @@ public final class Utils {
         }
 
         return mapVideos;
-    }
-
-    /**
-     * Returns a string representation of only the titles of videos from a list.
-     * @param videos the list of videos whose titles will be converted to string
-     * @return the string that contains only the titles of videos from a list
-     */
-    public static String videosTitle(final ArrayList<Video> videos) {
-        if (videos.isEmpty()) {
-            return "[]";
-        }
-
-        StringBuilder toArray = new StringBuilder("[");
-
-        for (int i = 0; i < videos.size() - 1; i++) {
-            toArray.append(videos.get(i).getTitle()).append(", ");
-        }
-
-        toArray.append(videos.get(videos.size() - 1).getTitle()).append("]");
-
-        return toArray.toString();
     }
 
     /**

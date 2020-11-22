@@ -50,6 +50,7 @@ public final class VideoDatabase {
             }
         }
 
+        // sort them by their garde; if equal -> sort alphabetically
         ratedVideos.sort((video1, video2) -> {
             int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
 
@@ -116,6 +117,7 @@ public final class VideoDatabase {
             }
         }
 
+        // sort them by their duration; if equal -> sort alphabetically
         longVideos.sort((video1, video2) -> {
             int compare = video1.getDuration() - video2.getDuration();
 
@@ -148,6 +150,7 @@ public final class VideoDatabase {
             }
         }
 
+        // sort them by their views; if equal -> sort alphabetically
         mostViewedVideos.sort((video1, video2) -> {
             int compare = video1.getViews() - video2.getViews();
 

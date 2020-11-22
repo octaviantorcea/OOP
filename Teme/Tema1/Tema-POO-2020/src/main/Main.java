@@ -76,7 +76,7 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        /* Builds the database*/
+        // Builds the database
         GenreDatabase genreDatabase = new GenreDatabase();
         VideoDatabase videoDatabase = new VideoDatabase(input.getMovies(), input.getSerials());
         UserDatabase userDatabase = new UserDatabase(input.getUsers(), videoDatabase,
@@ -84,7 +84,7 @@ public final class Main {
         ActorDatabase actorDatabase = new ActorDatabase(input.getActors());
         ActionDatabase actionDatabase = new ActionDatabase(input.getCommands());
 
-        /* executes every action*/
+        // executes every action
         for (Action action : actionDatabase.getActionsDatabase()) {
             String message = action.executeAction(actorDatabase, userDatabase,
                                                     videoDatabase, genreDatabase);

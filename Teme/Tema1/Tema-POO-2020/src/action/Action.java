@@ -216,9 +216,6 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getAvgQuery
-     * @param actorDatabase the database on which the query is made
-     * @param videoDatabase video database needed to compute average grade
-     * @return the message as a string that will be put in the JSONArray
      */
     private String averageQuery(final ActorDatabase actorDatabase,
                                 final VideoDatabase videoDatabase) {
@@ -231,8 +228,6 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getAwardsQuery
-     * @param actorDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String awardsQuery(final ActorDatabase actorDatabase) {
         ArrayList<String> actorsNames = actorDatabase.getAwardsQuery(this);
@@ -243,8 +238,6 @@ public final class Action {
 
     /**
      * @see database.ActorDatabase#getDescriptionQuery
-     * @param actorDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String descriptionQuery(final ActorDatabase actorDatabase) {
         ArrayList<String> actors = actorDatabase.getDescriptionQuery(this);
@@ -255,8 +248,6 @@ public final class Action {
 
     /**
      * @see database.VideoDatabase#getRatedVideos
-     * @param videoDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String ratingsQuery(final VideoDatabase videoDatabase) {
         ArrayList<String> ratedVideos = videoDatabase.getRatedVideos(this);
@@ -267,8 +258,6 @@ public final class Action {
 
     /**
      * @see database.VideoDatabase#getFavVideos
-     * @param videoDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String favQuery(final VideoDatabase videoDatabase) {
         ArrayList<String> favMovies = videoDatabase.getFavVideos(this);
@@ -279,8 +268,6 @@ public final class Action {
 
     /**
      * @see database.VideoDatabase#getLongVideos
-     * @param videoDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String longestQuery(final VideoDatabase videoDatabase) {
         ArrayList<String> longestMovies = videoDatabase.getLongVideos(this);
@@ -291,8 +278,6 @@ public final class Action {
 
     /**
      * @see database.VideoDatabase#getMostViewedVideos
-     * @param videoDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String mostViewedQuery(final VideoDatabase videoDatabase) {
         ArrayList<String> mostViewedMovies = videoDatabase.getMostViewedVideos(this);
@@ -303,8 +288,6 @@ public final class Action {
 
     /**
      * @see UserDatabase#getPopularUsers
-     * @param userDatabase the database on which the query is made
-     * @return the message as a string that will be put in the JSONArray
      */
     private String userQuery(final UserDatabase userDatabase) {
         ArrayList<String> users = userDatabase.getPopularUsers();
@@ -313,6 +296,13 @@ public final class Action {
         return QUERY_REZZ + users;
     }
 
+    /**
+     * Applies the recommendation based on it's type.
+     * @param user the user for whom the recommendation is made
+     * @param videoDatabase video database
+     * @param genreDatabase genre database
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String recommendation(final User user, final VideoDatabase videoDatabase,
                                   final GenreDatabase genreDatabase) {
         return switch (this.type) {
@@ -325,9 +315,11 @@ public final class Action {
         };
     }
 
+    // standard recommendation
     private String standardRec(final User user, final VideoDatabase videoDatabase) {
         String standardRec = "";
 
+        // finds the first unseen video
         for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
             if (!user.getViewedList().containsKey(videoEntry)) {
                 standardRec = videoEntry.getTitle();
@@ -342,9 +334,11 @@ public final class Action {
         }
     }
 
+    // best unseen recommendation
     private String bestUnseenRec(final User user, final VideoDatabase videoDatabase) {
         Video bestUnseenRec = null;
 
+        // finds the best unseen video
         for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
             if (!user.getViewedList().containsKey(videoEntry)) {
                 if (bestUnseenRec == null) {
@@ -364,23 +358,31 @@ public final class Action {
         }
     }
 
+    // popular recommendation
     private String popularRec(final User user, final VideoDatabase videoDatabase,
                               final GenreDatabase genreDatabase) {
+        // verifies if the user is premium
         if (!user.getSubscription()) {
             return POPULAR_REC + CANT_APPLY;
         }
 
+        // gets all the genres
         ArrayList<Genre> allGenres = new ArrayList<>(genreDatabase.getGenreDatabase().keySet());
 
+        // sorts them by the number of views (in ascending order)
         allGenres.sort(Comparator.comparingInt(key -> genreDatabase.getGenreDatabase().get(key)));
 
         ArrayList<String> stringGenres = new ArrayList<>();
 
+        // put them as string
         for (Genre genres : allGenres) {
             stringGenres.add(Utils.genreToString(genres));
         }
+
+        // we want them from the most viewed to the least viewed
         Collections.reverse(stringGenres);
 
+        // goes through each genre until it finds one video that is unseen
         for (String genreName : stringGenres) {
             for (Video video : videoDatabase.getVideoDatabase().values()) {
                 if (video.getGenres().contains(genreName)
@@ -394,12 +396,17 @@ public final class Action {
     }
 
     private String favRec(final User user, final VideoDatabase videoDatabase) {
+        // verifies if the user is premium
         if (!user.getSubscription()) {
             return FAV_REC + CANT_APPLY;
         }
 
         Video bestFav = null;
 
+        /*
+         goes through all the videos that are unseen by the user and retains
+         the one with the best rating
+        */
         for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
             if (!user.getViewedList().containsKey(videoEntry)) {
                 if (bestFav == null) {
@@ -422,12 +429,17 @@ public final class Action {
     }
 
     private String searchRec(final User user, final VideoDatabase videoDatabase) {
+        // verifies if the user is premium
         if (!user.getSubscription()) {
             return SEARCH_REC + CANT_APPLY;
         }
 
         ArrayList<String> searchRec = new ArrayList<>();
 
+        /*
+         goes through all the videos and retains only the ones that have the
+         specified genre
+        */
         for (Video videoEntry : videoDatabase.getVideoDatabase().values()) {
             if (!user.getViewedList().containsKey(videoEntry)
                     && videoEntry.getGenres().contains(this.genre)) {
@@ -443,9 +455,7 @@ public final class Action {
         }
     }
 
-    /*
-     ** reverses and trims the list based on the infos from action
-     */
+    // reverses and trims the list based on the infos from action
     private void reverseAndTrimIfNecessary(final ArrayList<String> list) {
         if (this.sortType.equals(DESCENDING)) {
             Collections.reverse(list);

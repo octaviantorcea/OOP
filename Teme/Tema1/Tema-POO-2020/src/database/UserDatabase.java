@@ -36,6 +36,7 @@ public final class UserDatabase {
             }
         }
 
+        // sort them by their number of ratings; if equal -> sort alphabetically
         users.sort((user1, user2) -> {
             int compare = user1.getNrOfRatings() - user2.getNrOfRatings();
 

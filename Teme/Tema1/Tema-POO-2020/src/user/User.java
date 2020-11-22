@@ -21,6 +21,10 @@ public final class User {
     private final String username;
     private final boolean subscription;
     private final HashSet<Video> favVideos = new HashSet<>();
+    /**
+     * Retains the videos that have been seen and the amount of times that
+     * user watched that video.
+     */
     private final HashMap<Video, Integer> viewedList = new HashMap<>();
     /**
      * The number of times this user has rated a video.

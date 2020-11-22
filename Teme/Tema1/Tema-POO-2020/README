@@ -1,38 +1,90 @@
-Object Oriented Programming Course
-Homework - VideosDB
+Octavian Torcea 324CA
 
-November 2020
+Programul incepe prin initializarea bazei de date:
+	-pentru GenreDatabase:
+		*se creeaza un hashmap
+		*keys -> genurile
+		*valori -> numarul de viewuri pentru fiecare gen (la inceput
+			toate sunt 0, se vor actualiza pe parcurs)
+	
+	-pentru VideoDatabase:
+		*se creeaza un linkedhashmap (pentru unele actiuni este necesara
+			pastrarea ordinii in care au fost adaugate videourile)
+		*keys -> titlurile videourilor
+		*valori -> obiectul video
+		*in aceeasi baza de date se retin si filmele si serialele
+		*se creeaza si se pun mai intai toate obiectele "movie", apoi "show"
+		
+	-pentru UserDatabase:
+		*se creeaza un hashmap
+		*keys -> username
+		*valori -> obiectul user
+		*pe langa informatiile specifice unui user, odata cu crearea unui
+			obiect se citeste lista sa de filme favorite si filme vizionate si
+			se actualizeaza baza de date de videouri (creste numarul de
+			vizionari si de cate ori un video a fost adaugat intr-o lista de
+			favorite)
+			
+	-pentru ActorDatabase:
+		*se creeaza un hashmap
+		*keys -> numele
+		*valori -> obiectul actor
+		*la crearea unui obiect actor se calculeaza si totalul premiilor
+			castigate
+			
+	-pentru ActionDatabase: un simplu arraylist de actiuni (cu toate datele
+		primite de la input)
+		
+Se executa apoi actiunile in functie de tipul acesteia (command, query sau
+recommendation):
 
-# Info
-https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema
+!!!metodele folosite sunt descrise mult mai detaliat in comentariile din cod!!!
 
-# About the code
-
-We provide the input tests, the logic that parses them and the checker that runs them.
-
-* test_db - contains the tests in JSON format
-* src
-   * checker - the checker's sources including the checkstyle necessary files, not to be modified
-   * fileio - classes for parsing the input files, not to be modified
-   * common, utils
-        * contain utility classes with constants and static methods
-        * you can add your own functionality in the existing classes or add new classes as well
-   * actor
-        * contains an enum for the types of awards an actor can have - do not modify it
-        * you can add here your actor related classes
-   * entertainment
-        * contains an enum for the supported video genres - do not modify it
-        * class for representing a Season of a tv show - do not modify it
-        * you can add here your entertainment related classes
-
-We encourage you to organize your implementation in packages based on the functionality their classes offer. Try to keep
-your code modular, readable and documented.
-
-# Testing
-
-The Main class runs the checker on your implementation. Add the entry point to your implementation in it.
-
-Run Main to test your implementation from the IDE or from command line.
-
-Run the main method from Test class with the name of the input file from the command line and the result will be written
-to the out.txt file. Thus, you can compare this result with ref.
+	-command:
+		*favorite -> adauga videoul in lista de favorite a unui user
+			
+		*view -> userul "vizioneaza" un video, incrementand numarul de
+			vizionari a videoului si a genurilor
+			
+		*rating -> userul ofera un rating videoului; dupa fiecare rating se
+			actualizeaza nota medie a filmului
+			
+	-query:
+		pentru actori (metodele se gasesc in ActorDatabase):
+			*average -> intoarce o lista de nume de actori ordonati in functie
+				de media tuturor filmelor in care au jucat; la fiecare apel de
+				metoda se calculeaza iar fiecare medie pentru toti actorii
+			
+			*awards -> intoarce o lista de nume de actori ce au primit toate
+			premiile date ca filtru, in ordinea numarului de premii totale
+			obtinute
+			
+			*filter description -> intoarce o lista de nume de actori ce au in
+				descrierea carierei toate cuvintele date ca filtru, sortata in
+				ordine alfabetica
+			
+		pentru videouri (metodele se gasesc in VideoDatabase):
+			*rating -> intoarce o lista de titluri de filme sortate dupa rating
+			
+			*favorite -> intoarce o lista de titluri de filme sortate in
+				functie de cate ori au fost adaugate in lista de favorite a
+				unui user
+				
+			*longest -> intoarce o lista de titluri de filme sortate dupa
+				duarat lor
+				
+			*most viewes -> intoarce o lista de titluri de filme sortate dupa
+				numarul de vizionari
+			
+		pentru useri:
+			-> intoarce o lista de useri sortati in functie de numarul de
+				ratinguri acordare
+				
+	-recommend: pentru fiecare metoda se itereaza prin baza de date pana se
+		gaseste videoul/videourile ce respecta cerinta; pentru recomandarile ce
+		necesita ca utilizatorul sa fie premium, aceasta verificare se face la
+		inceputul actiunii
+		
+De fapt fiecare actiune intoarce un string ce reprezinta mesajul ce trebuie pus
+in JSONArray, dar contin cate o metoda ce creeaza o lista (in functie de
+cerinta) ce va fi concatenata cu measjul specific fiecarei actiuni.

@@ -167,7 +167,9 @@ public final class VideoDatabase {
         return videosTitle;
     }
 
-    // verifies if the query is for movies or for shows
+    /**
+     * verifies if the query is for movies or for shows
+     */
     private void removeUnnecessary(final ArrayList<Video> videos, final Action action) {
         if (action.getObjectType().equals(MOVIES)) {
             videos.removeIf(Video::isShow);

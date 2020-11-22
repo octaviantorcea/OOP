@@ -193,7 +193,7 @@ public final class Action {
     }
 
     /**
-     * Applies the query depending on it's criteria.
+     * Applies the query depending on the action's criteria.
      * @param actorDatabase actor database
      * @param videoDatabase video database
      * @param userDatabase user database
@@ -315,7 +315,9 @@ public final class Action {
         };
     }
 
-    // standard recommendation
+    /**
+     * standard recommendation
+     */
     private String standardRec(final User user, final VideoDatabase videoDatabase) {
         String standardRec = "";
 
@@ -334,7 +336,9 @@ public final class Action {
         }
     }
 
-    // best unseen recommendation
+    /**
+     * best unseen recommendation
+     */
     private String bestUnseenRec(final User user, final VideoDatabase videoDatabase) {
         Video bestUnseenRec = null;
 
@@ -358,7 +362,9 @@ public final class Action {
         }
     }
 
-    // popular recommendation
+    /**
+     * popular recommendation
+     */
     private String popularRec(final User user, final VideoDatabase videoDatabase,
                               final GenreDatabase genreDatabase) {
         // verifies if the user is premium
@@ -395,6 +401,9 @@ public final class Action {
         return POPULAR_REC + CANT_APPLY;
     }
 
+    /**
+     * favorite recommendation
+     */
     private String favRec(final User user, final VideoDatabase videoDatabase) {
         // verifies if the user is premium
         if (!user.getSubscription()) {
@@ -428,6 +437,9 @@ public final class Action {
         }
     }
 
+    /**
+     * search recommendation
+     */
     private String searchRec(final User user, final VideoDatabase videoDatabase) {
         // verifies if the user is premium
         if (!user.getSubscription()) {
@@ -455,7 +467,9 @@ public final class Action {
         }
     }
 
-    // reverses and trims the list based on the infos from action
+    /**
+     * Reverses and trims the list based on the infos from action.
+     */
     private void reverseAndTrimIfNecessary(final ArrayList<String> list) {
         if (this.sortType.equals(DESCENDING)) {
             Collections.reverse(list);

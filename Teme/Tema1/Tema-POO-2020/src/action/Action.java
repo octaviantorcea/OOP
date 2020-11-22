@@ -32,7 +32,6 @@ import static common.Constants.FAV_REC;
 import static common.Constants.FILTER_DESCRIPTIONS;
 import static common.Constants.LONGEST;
 import static common.Constants.MOST_VIEWED;
-import static common.Constants.MOVIES;
 import static common.Constants.NOT_SEEN;
 import static common.Constants.NUM_RATINGS;
 import static common.Constants.POPULAR;
@@ -254,102 +253,52 @@ public final class Action {
         return QUERY_REZZ + actors;
     }
 
+    /**
+     * @see database.VideoDatabase#getRatedVideos
+     * @param videoDatabase the database on which the query is made
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String ratingsQuery(final VideoDatabase videoDatabase) {
-        ArrayList<Video> ratedVideos = new ArrayList<>();
+        ArrayList<String> ratedVideos = videoDatabase.getRatedVideos(this);
+        reverseAndTrimIfNecessary(ratedVideos);
 
-        if (MOVIES.equals(this.objectType)) {
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (!video.isShow() && video.getAvgRating() > 0
-                        && video.isFiltered(this)) {
-                    ratedVideos.add(video);
-                }
-            }
-        } else {
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.isShow() && video.getAvgRating() > 0
-                        && video.isFiltered(this)) {
-                    ratedVideos.add(video);
-                }
-            }
-        }
-
-        return getRatedVideos(ratedVideos);
+        return QUERY_REZZ + ratedVideos;
     }
 
+    /**
+     * @see database.VideoDatabase#getFavVideos
+     * @param videoDatabase the database on which the query is made
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String favQuery(final VideoDatabase videoDatabase) {
-        if (MOVIES.equals(this.objectType)) {
-            ArrayList<Video> favMovies = new ArrayList<>();
+        ArrayList<String> favMovies = videoDatabase.getFavVideos(this);
+        reverseAndTrimIfNecessary(favMovies);
 
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (!video.isShow() && video.getNrOfFav() > 0
-                        && video.isFiltered(this)) {
-                    favMovies.add(video);
-                }
-            }
-
-            return getFavVideos(favMovies);
-        } else {
-            ArrayList<Video> favShows = new ArrayList<>();
-
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.isShow() && video.getNrOfFav() > 0
-                        && video.isFiltered(this)) {
-                    favShows.add(video);
-                }
-            }
-
-            return getFavVideos(favShows);
-        }
+        return QUERY_REZZ + favMovies;
     }
 
+    /**
+     * @see database.VideoDatabase#getLongVideos
+     * @param videoDatabase the database on which the query is made
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String longestQuery(final VideoDatabase videoDatabase) {
-        if (MOVIES.equals(this.objectType)) {
-            ArrayList<Video> longestMovies = new ArrayList<>();
+        ArrayList<String> longestMovies = videoDatabase.getLongVideos(this);
+        reverseAndTrimIfNecessary(longestMovies);
 
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (!video.isShow() && video.isFiltered(this)) {
-                    longestMovies.add(video);
-                }
-            }
-
-            return getLongVideos(longestMovies);
-        } else {
-            ArrayList<Video> longestShows = new ArrayList<>();
-
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.isShow() && video.isFiltered(this)) {
-                    longestShows.add(video);
-                }
-            }
-
-            return getLongVideos(longestShows);
-        }
+        return QUERY_REZZ + longestMovies;
     }
 
+    /**
+     * @see database.VideoDatabase#getMostViewedVideos
+     * @param videoDatabase the database on which the query is made
+     * @return the message as a string that will be put in the JSONArray
+     */
     private String mostViewedQuery(final VideoDatabase videoDatabase) {
-        if (MOVIES.equals(this.objectType)) {
-            ArrayList<Video> mostViewedMovies = new ArrayList<>();
+        ArrayList<String> mostViewedMovies = videoDatabase.getMostViewedVideos(this);
+        reverseAndTrimIfNecessary(mostViewedMovies);
 
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (!video.isShow() && video.getViews() > 0
-                        && video.isFiltered(this)) {
-                    mostViewedMovies.add(video);
-                }
-            }
-
-            return getMostViewedVideos(mostViewedMovies);
-        } else {
-            ArrayList<Video> mostViewedShows = new ArrayList<>();
-
-            for (Video video : videoDatabase.getVideoDatabase().values()) {
-                if (video.isShow() && video.getViews() > 0
-                        && video.isFiltered(this)) {
-                    mostViewedShows.add(video);
-                }
-            }
-
-            return getMostViewedVideos(mostViewedShows);
-        }
+        return QUERY_REZZ + mostViewedMovies;
     }
 
     /**
@@ -494,94 +443,9 @@ public final class Action {
         }
     }
 
-    private String getMostViewedVideos(final ArrayList<Video> mostViewedVideos) {
-        mostViewedVideos.sort((video1, video2) -> {
-            int compare = video1.getViews() - video2.getViews();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(mostViewedVideos);
-        }
-
-        while (this.number < mostViewedVideos.size()) {
-            mostViewedVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(mostViewedVideos);
-    }
-
-    private String getLongVideos(final ArrayList<Video> longestVideos) {
-        longestVideos.sort((video1, video2) -> {
-            int compare = video1.getDuration() - video2.getDuration();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(longestVideos);
-        }
-
-        while (this.number < longestVideos.size()) {
-            longestVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(longestVideos);
-    }
-
-    private String getFavVideos(final ArrayList<Video> favVideos) {
-        favVideos.sort((video1, video2) -> {
-            int compare = video1.getNrOfFav() - video2.getNrOfFav();
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(favVideos);
-        }
-
-        while (this.number < favVideos.size()) {
-            favVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(favVideos);
-    }
-
-    private String getRatedVideos(final ArrayList<Video> ratedVideos) {
-        ratedVideos.sort((video1, video2) -> {
-            int compare = video1.getAvgRating().compareTo(video2.getAvgRating());
-
-            if (compare != 0) {
-                return compare;
-            } else {
-                return video1.getTitle().compareTo(video2.getTitle());
-            }
-        });
-
-        if (this.sortType.equals(DESCENDING)) {
-            Collections.reverse(ratedVideos);
-        }
-
-        while (this.number < ratedVideos.size()) {
-            ratedVideos.remove(this.number);
-        }
-
-        return QUERY_REZZ + Utils.videosTitle(ratedVideos);
-    }
-
+    /*
+     ** reverses and trims the list based on the infos from action
+     */
     private void reverseAndTrimIfNecessary(final ArrayList<String> list) {
         if (this.sortType.equals(DESCENDING)) {
             Collections.reverse(list);
@@ -600,5 +464,9 @@ public final class Action {
 
     public List<List<String>> getFilters() {
         return filters;
+    }
+
+    public String getObjectType() {
+        return objectType;
     }
 }
